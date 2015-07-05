@@ -17,10 +17,10 @@ public class Application
     	DefaultXsdParser parser = new DefaultXsdParser(file, handler);
     	
 	    SchemaGlobalElement element = parser
-    		.getSchemaTypeLoader()
-    		.findElement(
-				new QName("http://www.neoflex.ru/Customers/", "createOrUpdateCustomerRequest")
-			)
+	    	.getSchemaTypeLoader()
+	    	.findElement(
+    			new QName("http://www.neoflex.ru/Customers/", "createOrUpdateCustomerRequest")
+	    	)
     	;
 	    
         parser.processElement(element, new String());
