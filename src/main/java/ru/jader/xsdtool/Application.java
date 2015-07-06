@@ -12,16 +12,16 @@ public class Application
 {
     public static void main( String[] args ) throws Exception
     {	
-    	File file = new File("xsd/human_factor/Customers.xsd");
-    	XmlResultHandler handler = new XmlResultHandler("xsd/createOrUpdateCustomerRequest.xml", "UTF-8");
+    	File file = new File("Some.xsd");
+    	XmlResultHandler handler = new XmlResultHandler("Some.xml", "UTF-8");
     	DefaultXsdParser parser = new DefaultXsdParser(file, handler);
     	
-	    SchemaGlobalElement element = parser
-	    	.getSchemaTypeLoader()
-	    	.findElement(
-    			new QName("http://www.neoflex.ru/Customers/", "createOrUpdateCustomerRequest")
-	    	)
-    	;
+    	SchemaGlobalElement element = parser
+            .getSchemaTypeLoader()
+            .findElement(
+                new QName("SomeNS", "SomeRequest")
+            )
+        ;
 	    
         parser.processElement(element, new String());
         handler.close();
