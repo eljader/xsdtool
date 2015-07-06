@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-public class XmlResultHandler {
+public class XmlResultHandler implements Handler {
 	
 	private String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 	private String ROOT_NAME = "units";
