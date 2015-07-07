@@ -44,7 +44,7 @@ public abstract class AbstractXsdParser {
 		if(type.getContentModel() != null && isNotRecursive)
 			parseType(type, path); 
 		else
-			processElement(path, element);
+			this.process(path, element);
 	}
 
 	public void parseType(SchemaType type, String path) {
@@ -52,7 +52,7 @@ public abstract class AbstractXsdParser {
 
 		for (int i = 0; i < attributes.length; i++) {
 			SchemaProperty attribute = attributes[i];
-			processAttribute(path, attribute);
+			this.process(path, attribute);
 		}
 
 		SchemaParticle[] childes = type.getContentModel().getParticleChildren();
@@ -76,9 +76,7 @@ public abstract class AbstractXsdParser {
 	
 	protected abstract String rebuildPath(String path, SchemaLocalElement element);
 	
-	protected abstract void processElement(String path, SchemaLocalElement element);
-	
-	protected abstract void processAttribute(String path, SchemaProperty attribute);
+	protected abstract void process(String path, Object parseObject);
 	
 	protected abstract boolean isRecursive(String path, SchemaLocalElement element);
 }

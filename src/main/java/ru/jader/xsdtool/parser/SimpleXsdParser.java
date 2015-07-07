@@ -21,8 +21,8 @@ import ru.jader.xsdtool.parser.model.XsdUnit;
 
 public class SimpleXsdParser extends AbstractXsdParser {
 	
-	private static String DELIMITER = "/";
-	private static String ATTR_DELIMITER = DELIMITER + "@";
+	private static String ELEMENT_DELIMITER = "/";
+	private static String ATTR_DELIMITER = ELEMENT_DELIMITER + "@";
 	
 	private Handler handler;
 	
@@ -33,49 +33,44 @@ public class SimpleXsdParser extends AbstractXsdParser {
 	
 	@Override
 	protected String rebuildPath(String path, SchemaLocalElement element) {
-		return path + DELIMITER + element.getName().getLocalPart();  	
+		return rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER);
+	}
+	
+	private String rebuildPath(String path, String name, String delimiter) {
+		return path + delimiter + name;  	
 	}
 	
 	@Override
-	protected void processElement(String path, SchemaLocalElement element) {
-		handler.handle(createXsdUnit(path, element));
+	protected void process(String path, Object parseObject) {
+		handler
+			.handle(createXsdUnit(path, parseObject))
+		;
 	}
 	
-	@Override
-	protected void processAttribute(String path, SchemaProperty attribute) {
-		handler.handle(createXsdUnit(path, attribute, ATTR_DELIMITER));
-	}
-
 	@Override
 	protected boolean isRecursive(String path, SchemaLocalElement element) {
 		//TODO make namespace sensitive
 		return (path.indexOf(String.format("/%s/", element.getName().getLocalPart())) == -1) ? false : true;	
 	}
 	
-	private XsdUnit createXsdUnit(String path, SchemaLocalElement element) {
-		return 
-			createXsdUnit(
-				path,
-				assembleType(element.getType()),
-				assembleDescription(element)
-			)
-		;
-	}
+	private XsdUnit createXsdUnit(String path, Object parseObject) {	
+		SchemaType type = null;
+		StringBuilder description = new StringBuilder();
+				
+		if (parseObject instanceof SchemaLocalElement) {
+			SchemaLocalElement element = (SchemaLocalElement) parseObject;		
+			type = element.getType(); 
+			assembleDescription(element, description);
+		}
 
-	private XsdUnit createXsdUnit(String path, SchemaProperty property ,String delimiter) {
-		return 
-			createXsdUnit(
-				path + delimiter + property.getName().getLocalPart(),
-				assembleType(property.getType()),
-				assembleDescription(property)
-			)
-		;
-	}
-
-	private XsdUnit createXsdUnit(String path, String type, String description) {
-		return 
-			new XsdUnit(path, type, description)
-		;
+		if (parseObject instanceof SchemaProperty) {
+			SchemaProperty attribute = (SchemaProperty) parseObject;
+			path = rebuildPath(path, attribute.getName().getLocalPart(), ATTR_DELIMITER);
+			type = attribute.getType();
+			assembleDescription(type, description);
+		}
+			
+		return new XsdUnit(path, assembleType(type), description.toString());
 	}
 
 	private String assembleType(SchemaType type) {  	
@@ -87,15 +82,7 @@ public class SimpleXsdParser extends AbstractXsdParser {
 			return type.getBaseType().getName().getLocalPart();
 	}
 
-	private String assembleDescription(SchemaProperty property) {
-		StringBuilder description = new StringBuilder();
-		assembleDescription(property.getType(), description);
-
-		return description.toString();
-	}
-
-	private String assembleDescription(SchemaLocalElement element) {
-		StringBuilder description = new StringBuilder();
+	private void assembleDescription(SchemaLocalElement element, StringBuilder description) {
 		SchemaAnnotation annotation = element.getAnnotation();
 
 		if(annotation != null)
@@ -103,8 +90,6 @@ public class SimpleXsdParser extends AbstractXsdParser {
 		;
 
 		assembleDescription(element.getType(), description);
-
-		return description.toString();
 	}
 
 	private void assembleDescription(SchemaType type, StringBuilder description) {
@@ -136,7 +121,7 @@ public class SimpleXsdParser extends AbstractXsdParser {
 		for (int i = 0; i < infos.length; i++) {
 			XmlObject info = infos[i];
 			addLineSeparator(description).append(info.newCursor().getTextValue().trim());
-		}	
+		}
 	}
 
 	private String[] getEnum(SchemaType type) {
@@ -175,9 +160,8 @@ public class SimpleXsdParser extends AbstractXsdParser {
 
 	private StringBuilder addLineSeparator(StringBuilder builder) {
 		if(builder.length() > 0)
-			builder.append(System.getProperty("line.separator"))
-		;
-
+			builder.append(System.getProperty("line.separator"));
+		
 		return builder;
 	}
 }
