@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -13,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class XlsResultHandler implements Handler {
 	
@@ -28,7 +28,7 @@ public class XlsResultHandler implements Handler {
 		
 	public XlsResultHandler(String filename) throws FileNotFoundException {
 		writer = new FileOutputStream(filename);
-		workbook = new HSSFWorkbook();
+		workbook = new XSSFWorkbook();
 		sheet = workbook.createSheet();
 		style = getStyles();
 		rowNum = 0;
