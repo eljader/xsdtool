@@ -1,8 +1,10 @@
-package ru.jader.xsdtool.parser;
+package ru.jader.xsdtool.parser.handler;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+
+import ru.jader.xsdtool.parser.model.XsdUnit;
 
 public class XmlResultHandler implements Handler {
 	
@@ -24,7 +26,7 @@ public class XmlResultHandler implements Handler {
 	public void handle(XsdUnit unit) {
 		openTag(UNIT_NAME, IDENT_TAB);
 		
-		addElement("path", unit.getXpath(), IDENT_TAB * 2);
+		addElement("path", unit.getPath(), IDENT_TAB * 2);
 		addElement("type", unit.getType(), IDENT_TAB * 2);
 		addElement("description", String.format("<![CDATA[%s]]>", unit.getDescription()), IDENT_TAB * 2);
 		

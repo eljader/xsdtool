@@ -1,4 +1,4 @@
-package ru.jader.xsdtool.parser;
+package ru.jader.xsdtool.parser.handler;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import ru.jader.xsdtool.parser.model.XsdUnit;
 
 public class XlsResultHandler implements Handler {
 	
@@ -42,7 +44,7 @@ public class XlsResultHandler implements Handler {
 		addValue(row, 1, "", STYLE_TYPE);
 		addValue(row, 2, "", STYLE_LONG_TEXT);
 		
-		addValue(row, 3, unit.getXpath(),       STYLE_LONG_TEXT);
+		addValue(row, 3, unit.getPath(),       STYLE_LONG_TEXT);
 		addValue(row, 4, unit.getType(),        STYLE_TYPE);
 		addValue(row, 5, unit.getDescription(), STYLE_LONG_TEXT);
 	}

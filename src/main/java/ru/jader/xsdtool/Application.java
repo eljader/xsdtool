@@ -5,10 +5,13 @@ import java.io.File;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
 
-import ru.jader.xsdtool.parser.Handler;
-import ru.jader.xsdtool.parser.XlsResultHandler;
-import ru.jader.xsdtool.parser.DefaultXsdParser;
+import ru.jader.xsdtool.parser.AbstractXsdParser;
+import ru.jader.xsdtool.parser.SimpleXsdParser;
+import ru.jader.xsdtool.parser.handler.Handler;
+import ru.jader.xsdtool.parser.handler.XlsResultHandler;
+
 
 public class Application
 {
@@ -17,16 +20,26 @@ public class Application
     	File file = new File("");
     	//Handler handler = new XmlResultHandler("", "UTF-8");
     	Handler handler = new XlsResultHandler("");
-    	DefaultXsdParser parser = new DefaultXsdParser(file, handler);
+    	AbstractXsdParser parser = new SimpleXsdParser(file, handler);
+    	
     	
     	SchemaGlobalElement element = parser
-            .getSchemaTypeLoader()
             .findElement(
                 new QName("", "")
             )
         ;
-	    
-        parser.processElement(element, new String());
+        
+    	SchemaType type = element.getType();
+        
+        /*
+    	SchemaType type = parser
+            .findType(
+                new QName("")
+            )
+        ;*/
+
+        parser.parseType(type, new String());
+        
         handler.close();
     }
 }

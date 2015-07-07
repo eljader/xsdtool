@@ -1,23 +1,23 @@
-package ru.jader.xsdtool.parser;
+package ru.jader.xsdtool.parser.model;
 
 public class XsdUnit {
 	
-	private String xpath;
+	private String path;
 	private String type;
 	private String description;
 	
 	public XsdUnit(String xpath, String type, String description) {
-		this.xpath = xpath;
+		this.path = xpath;
 		this.type = type;
 		this.description = description;
 	}
 	
-	public String getXpath() {
-		return xpath;
+	public String getPath() {
+		return path;
 	}
 	
-	public void setXpath(String xpath) {
-		this.xpath = xpath;
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	public String getType() {
