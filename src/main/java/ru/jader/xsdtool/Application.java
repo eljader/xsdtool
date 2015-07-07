@@ -17,15 +17,15 @@ public class Application
 {
     public static void main( String[] args ) throws Exception
     {	
-    	File file = new File("xsd/CreateCardAccountContract_wsdl/CardBackoffice.xsd");
+    	File file = new File("");
     	//Handler handler = new XmlResultHandler("", "UTF-8");
-    	Handler handler = new XlsResultHandler("xsd/result/createOrUpdateCreditCardApplicationRequest.xlsx");
+    	Handler handler = new XlsResultHandler("");
     	AbstractXsdParser parser = new SimpleXsdParser(file, handler);
     	
     	
     	SchemaGlobalElement element = parser
             .findElement(
-                new QName("http://www.neoflex.ru/CardBackoffice/", "createOrUpdateCreditCardApplicationRequest")
+                new QName("", "")
             )
         ;
         
@@ -34,7 +34,7 @@ public class Application
         /*
     	SchemaType type = parser
             .findType(
-                new QName("http://binbank.ru/EKPBO/DataTypes/Entities", "EKpboApplication")
+                new QName("", "")
             )
         ;*/
 
