@@ -20,8 +20,6 @@ public class XlsResultHandler implements Handler {
 	private static short STYLE_TYPE = 2;
 	private static short STYLE_LONG_TEXT = 3;
 	
-	
-	
 	private FileOutputStream writer; 
 	private Workbook workbook;
 	private Sheet sheet;
@@ -57,23 +55,22 @@ public class XlsResultHandler implements Handler {
 	private Map<Short, CellStyle> getStyles() {
 		Map<Short, CellStyle> map = new HashMap<Short, CellStyle>();
 		
-		Short borderStyle = CellStyle.BORDER_MEDIUM;
 		Font bold = workbook.createFont();
 		bold.setBoldweight(Font.BOLDWEIGHT_BOLD);
 		
-		CellStyle header = addBorder(workbook.createCellStyle(), borderStyle);
+		CellStyle header = addBorder(workbook.createCellStyle(),  CellStyle.BORDER_MEDIUM);
 		header.setFont(bold);
 		header.setAlignment(CellStyle.ALIGN_CENTER);
 		header.setVerticalAlignment(CellStyle.VERTICAL_TOP);
 		map.put(STYLE_HEADER, header);
 		
-		CellStyle longText = addBorder(workbook.createCellStyle(), borderStyle);
+		CellStyle longText = addBorder(workbook.createCellStyle(), CellStyle.BORDER_THIN);
 		longText.setAlignment(CellStyle.ALIGN_LEFT);
 		longText.setVerticalAlignment(CellStyle.VERTICAL_TOP);
 		longText.setWrapText(true);
 		map.put(STYLE_LONG_TEXT, longText);
 		
-		CellStyle type = addBorder(workbook.createCellStyle(), borderStyle);
+		CellStyle type = addBorder(workbook.createCellStyle(), CellStyle.BORDER_THIN);
 		type.setAlignment(CellStyle.ALIGN_CENTER);
 		type.setVerticalAlignment(CellStyle.VERTICAL_TOP);
 		map.put(STYLE_TYPE, type);
@@ -100,10 +97,10 @@ public class XlsResultHandler implements Handler {
 		sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
 		sheet.addMergedRegion(new CellRangeAddress(0,0,3,5));
 		
-		sheet.setColumnWidth(0, 10000);
+		sheet.setColumnWidth(0, 15000);
 		sheet.setColumnWidth(1, 6000);
 		sheet.setColumnWidth(2, 10000);
-		sheet.setColumnWidth(3, 10000);
+		sheet.setColumnWidth(3, 15000);
 		sheet.setColumnWidth(4, 6000);
 		sheet.setColumnWidth(5, 10000);
 		
