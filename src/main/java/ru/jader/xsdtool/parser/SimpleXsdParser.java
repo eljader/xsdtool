@@ -57,23 +57,25 @@ public class SimpleXsdParser extends AbstractXsdParser {
 		SchemaType type = null;
 		StringBuilder description = new StringBuilder();
 				
-		if (parseObject instanceof SchemaLocalElement) {
+		if(parseObject instanceof SchemaLocalElement) {		
 			SchemaLocalElement element = (SchemaLocalElement) parseObject;		
 			type = element.getType(); 
-			assembleDescription(element, description);
+			assembleDescription(element, description);		
 		}
-
-		if (parseObject instanceof SchemaProperty) {
+		else if(parseObject instanceof SchemaProperty) {		
 			SchemaProperty attribute = (SchemaProperty) parseObject;
-			path = rebuildPath(path, attribute.getName().getLocalPart(), ATTR_DELIMITER);
+			path = rebuildPath(path, attribute.getName().getLocalPart(), ATTR_DELIMITER);	
 			type = attribute.getType();
 			assembleDescription(type, description);
 		}
-			
+		else {
+			throw new RuntimeException(String.format("not implemented for %s", parseObject.getClass()));
+		}
+
 		return new XsdUnit(path, assembleType(type), description.toString());
 	}
 
-	private String assembleType(SchemaType type) {  	
+	private String assembleType(SchemaType type) {		
 		if(type.isPrimitiveType())
 			return type.getName().getLocalPart();
 		else if(type.getContentModel() != null)
