@@ -55,14 +55,18 @@ public abstract class AbstractXsdParser {
 			this.process(path, attribute);
 		}
 
-		SchemaParticle[] childes = type.getContentModel().getParticleChildren();
+		SchemaParticle particle = type.getContentModel();
+		
+		if(particle.countOfParticleChild() == 0) {
+			parseElement((SchemaLocalElement) particle, path);
+		} 
+		else {
+			SchemaParticle[] childes = particle.getParticleChildren();
 
-		if(childes == null)
-			childes = type.getContentModel().getType().getContentModel().getParticleChildren();
-
-		for (int i = 0; i < childes.length; i++) {
-			SchemaLocalElement element = (SchemaLocalElement) childes[i];
-			parseElement(element, path);
+			for (int i = 0; i < childes.length; i++) {
+				SchemaLocalElement element = (SchemaLocalElement) childes[i];
+				parseElement(element, path);
+			}
 		}
 	}
 	
