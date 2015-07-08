@@ -105,14 +105,14 @@ public class XlsResultHandler implements Handler {
 		sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
 		sheet.addMergedRegion(new CellRangeAddress(0,0,3,5));
 							
-		for(List<HeaderCell> headerRow: getHeader()) {
-			Row row = sheet.createRow(getRowNum());		
-			for(HeaderCell cell : headerRow) {								
+		getHeader().forEach(headerRow -> {
+			Row row = sheet.createRow(getRowNum());
+			headerRow.forEach(cell -> {
 				addValue(row, cell.getColNum(), cell.getTitle(), cell.getStyle());
 				if(cell.getWidth() != null)
 					sheet.setColumnWidth(cell.getColNum(), cell.getWidth());
-			}
-		}
+			});
+		});
 	}
 	
 	private List<List<HeaderCell>> getHeader() {
