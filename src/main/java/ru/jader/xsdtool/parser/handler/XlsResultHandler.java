@@ -1,7 +1,8 @@
 package ru.jader.xsdtool.parser.handler;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
 public class XlsResultHandler implements Handler {
@@ -24,14 +24,14 @@ public class XlsResultHandler implements Handler {
 	private static short STYLE_TYPE = 2;
 	private static short STYLE_LONG_TEXT = 3;
 		
-	private FileOutputStream writer; 
+	private OutputStream writer; 
 	private Workbook workbook;
 	private Sheet sheet;
 	private Map<Short, CellStyle> styles;
 	private int rowNum;
 		
-	public XlsResultHandler(String filename) throws FileNotFoundException {
-		writer = new FileOutputStream(filename);
+	public XlsResultHandler(OutputStream writer) throws FileNotFoundException {
+		this.writer = writer;
 		workbook = new XSSFWorkbook();
 		sheet = workbook.createSheet();
 		styles = createStyles();
@@ -41,7 +41,7 @@ public class XlsResultHandler implements Handler {
 	
 	public void handle(XsdUnit unit) {
 		Row row = sheet.createRow(getRowNum());
-		
+
 		addValue(row, 0, null, STYLE_LONG_TEXT);
 		addValue(row, 1, null, STYLE_TYPE);
 		addValue(row, 2, null, STYLE_LONG_TEXT);
@@ -50,9 +50,11 @@ public class XlsResultHandler implements Handler {
 		addValue(row, 5, unit.getDescription(), STYLE_LONG_TEXT);
 	}
 	
-	public void close() throws Exception {
-		workbook.write(writer);
-		writer.close();
+	public void finalize() {	
+		try {
+			workbook.write(writer);
+			writer.flush();
+		} catch (IOException e) { throw new RuntimeException(e); }
 	}
 	
 	private int getRowNum() {

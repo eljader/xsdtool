@@ -1,8 +1,6 @@
 package ru.jader.xsdtool.parser.handler;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
@@ -17,9 +15,9 @@ public class XmlResultHandler implements Handler {
 	
 	private PrintWriter writer;
 		
-	public XmlResultHandler(String filename, String encoding) throws FileNotFoundException, UnsupportedEncodingException {
-		this.writer = new PrintWriter(filename, encoding);
-		writer.println(XML_DECLARATION);
+	public XmlResultHandler(PrintWriter writer) {
+		this.writer = writer;
+		this.writer.println(XML_DECLARATION);
 		openTag(ROOT_NAME, IDENT_NO);
 	}
 	
@@ -33,9 +31,9 @@ public class XmlResultHandler implements Handler {
 		closeTag(UNIT_NAME, IDENT_TAB);
 	}
 	
-	public void close() {
+	public void finalize() {
 		closeTag(ROOT_NAME, IDENT_NO);
-		writer.close();
+		writer.flush();
 	}
 	
 	private void openTag(String tag, int indentSize) {
