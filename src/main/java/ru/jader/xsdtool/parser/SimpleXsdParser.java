@@ -1,6 +1,5 @@
 package ru.jader.xsdtool.parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,15 +18,14 @@ import org.apache.xmlbeans.XmlObject;
 import ru.jader.xsdtool.parser.handler.Handler;
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
-public class SimpleXsdParser extends AbstractXsdParser {
+public class SimpleXsdParser extends XsdParser {
 	
 	private static String ELEMENT_DELIMITER = "/";
 	private static String ATTR_DELIMITER = ELEMENT_DELIMITER + "@";
 	
 	private Handler handler;
 	
-	public SimpleXsdParser(File file, Handler handler) throws XmlException, IOException {
-		super(file);
+	public SimpleXsdParser(Handler handler) throws XmlException, IOException {
 		this.handler = handler;
 	}
 	

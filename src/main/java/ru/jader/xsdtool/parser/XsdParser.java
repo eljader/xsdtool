@@ -1,42 +1,30 @@
 package ru.jader.xsdtool.parser;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.namespace.QName;
-
+import org.apache.xmlbeans.SchemaComponent;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaLocalElement;
 import org.apache.xmlbeans.SchemaParticle;
 import org.apache.xmlbeans.SchemaProperty;
 import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
-public abstract class AbstractXsdParser {
-
-	protected SchemaTypeSystem sts;
-	protected SchemaTypeLoader stl;
-
-	public AbstractXsdParser(File file) throws XmlException, IOException {	    
-		this.sts = XmlBeans
-			.compileXsd(
-				new XmlObject[]{XmlObject.Factory.parse(file)},
-				XmlBeans.getBuiltinTypeSystem(),
-				null
-			)
-		;
-		this.stl = XmlBeans
-			.typeLoaderUnion(
-				new SchemaTypeLoader[]{sts,XmlBeans.getBuiltinTypeSystem()}
-			)
-		;
-	}
+public abstract class XsdParser {
 	
-	public void parseElement(SchemaLocalElement element, String path) {
+	public void parse(SchemaComponent component) {
+		SchemaType type = null;
+		
+		if(component instanceof SchemaType)
+			type = (SchemaType) component;
+			
+		if(component instanceof SchemaGlobalElement)
+			type = ((SchemaGlobalElement) component).getType();
+			
+		if(type == null) 
+			throw new RuntimeException(String.format("not implemented for %s", component.getClass()));
+		
+		parseType(type, new String());
+	}
+
+	private void parseElement(SchemaLocalElement element, String path) {
 		SchemaType type = element.getType();
 		boolean isNotRecursive = !this.isRecursive(path, element);
 		path = this.rebuildPath(path, element);
@@ -47,7 +35,7 @@ public abstract class AbstractXsdParser {
 			this.process(path, element);
 	}
 
-	public void parseType(SchemaType type, String path) {
+	private void parseType(SchemaType type, String path) {
 		SchemaProperty[] attributes = type.getAttributeProperties();
 
 		for (int i = 0; i < attributes.length; i++) {
@@ -69,15 +57,7 @@ public abstract class AbstractXsdParser {
 			}
 		}
 	}
-	
-	public SchemaGlobalElement findElement(QName name) {
-		return stl.findElement(name);
-	}
-	
-	public SchemaType findType(QName name) {
-		return stl.findType(name);
-	}
-	
+		
 	protected abstract String rebuildPath(String path, SchemaLocalElement element);
 	
 	protected abstract void process(String path, Object parseObject);

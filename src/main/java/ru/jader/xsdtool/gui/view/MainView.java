@@ -3,21 +3,35 @@ package ru.jader.xsdtool.gui.view;
 import java.awt.event.WindowAdapter;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ru.jader.xsdtool.gui.listener.act.LockFrameListener;
-import ru.jader.xsdtool.gui.listener.act.RenderViewListener;
-import ru.jader.xsdtool.gui.listener.win.UnlockFrameCloseListener;
+import org.apache.xmlbeans.SchemaComponent;
+
+import ru.jader.xsdtool.common.KeyValue;
+import ru.jader.xsdtool.gui.command.LoadSchemaFileCommand;
+import ru.jader.xsdtool.gui.listener.GenerateXlsResultListener;
+import ru.jader.xsdtool.gui.listener.LoadFileListener;
+import ru.jader.xsdtool.gui.listener.SwitchButtonListener;
+import ru.jader.xsdtool.parser.Schema;
 
 public class MainView extends FrameView {
 	
 	private static String WINDOW_NAME = "xsdtool";
 	private static int WINDOW_WIDTH = 800;
 	private static int WINDOW_HEIGHT = 600;
+	
+	private Schema schema;
+	
+	public MainView() {
+		this.schema = new Schema();
+	}
 
 	@Override
 	protected void doRender(JFrame frame) {
@@ -41,22 +55,36 @@ public class MainView extends FrameView {
 	protected JPanel getPanel(JFrame frame) {
 		JPanel panel = new JPanel();		
 		panel.setLayout(null);
-				
-		JButton runButton = new JButton("make template");
-		runButton.setBounds(frame.getWidth() - 150, frame.getHeight() - 400, 120, 25);
-		runButton.setEnabled(false);
-		panel.add(runButton);
+							
+		JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = new JComboBox<KeyValue<String, SchemaComponent>>();
+		schemaCombo.setBounds(frame.getWidth() - 520, frame.getHeight() - 350, 220, 25);
+		schemaCombo.setEditable(false);
+		schemaCombo.setEditable(false);
+		panel.add(schemaCombo);
 		
+		JButton parseButton = new JButton("make template");
+		parseButton.setBounds(frame.getWidth() - 280, frame.getHeight() - 350, 120, 25);
+		parseButton.setEnabled(false);
+		panel.add(parseButton);
+		
+		schemaCombo.addActionListener(new SwitchButtonListener(parseButton));
+		parseButton.addActionListener(new GenerateXlsResultListener(schemaCombo));
+
+		JTextField filePath = new JTextField();
+		filePath.setBounds(frame.getWidth() - 520, frame.getHeight() - 400, 220, 25);
+		filePath.setEditable(false);
+		panel.add(filePath);
+				
 		JButton browseFile = new JButton("load schema");
 		browseFile.setBounds(frame.getWidth() - 280, frame.getHeight() - 400, 120, 25);
+		browseFile.addActionListener(new LoadFileListener(
+				"Load Schema",
+				new FileNameExtensionFilter(".xsd .wsdl", "xsd", "wsdl"),
+				new LoadSchemaFileCommand(filePath, schemaCombo, schema)
+			)
+		);
 		panel.add(browseFile);
-		
-		FrameView browseFileView = new BrowseFileView();
-		
-		browseFileView.getFrame().addWindowListener(new UnlockFrameCloseListener(frame));
-		browseFile.addActionListener(new RenderViewListener(browseFileView));
-		browseFile.addActionListener(new LockFrameListener(frame));
-				
+						
 		int textAreaHeight = frame.getHeight() / 3;
 		int textAreaWidth = frame.getWidth() - 20;
 		int indentTop = frame.getHeight() - textAreaHeight - 50;
