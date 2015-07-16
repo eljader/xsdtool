@@ -7,7 +7,7 @@ import org.apache.xmlbeans.SchemaParticle;
 import org.apache.xmlbeans.SchemaProperty;
 import org.apache.xmlbeans.SchemaType;
 
-public abstract class XsdParser {
+public abstract class SchemaComponentParser {
 	
 	public void parse(SchemaComponent component) {
 		SchemaType type = null;

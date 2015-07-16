@@ -20,8 +20,14 @@ public final class SwitchButtonListener implements ActionListener {
 	
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(ActionEvent e) {
-		JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = (JComboBox<KeyValue<String, SchemaComponent>>) e.getSource();
-		KeyValue<String, SchemaComponent> item = (KeyValue<String, SchemaComponent>) schemaCombo.getSelectedItem();
+		
+		JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = 
+			(JComboBox<KeyValue<String, SchemaComponent>>) e.getSource()
+		;
+		
+		KeyValue<String, SchemaComponent> item = 
+			(KeyValue<String, SchemaComponent>) schemaCombo.getSelectedItem()
+		;
 		
 		button.setEnabled(item.getValue() == null ? false: true);
 	}

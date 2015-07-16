@@ -2,16 +2,16 @@ package ru.jader.xsdtool.gui.command;
 
 import java.io.File;
 
-public abstract class FileCommand implements Command{
-	
-	protected File file;
+public abstract class FileCommand implements Command {
 
-	public File getFile() {
-		return file;
-	}
+    protected File file;
 
-	public FileCommand setFile(File file) {
-		this.file = file;
-		return this;
-	}
+    public File getFile() {
+        return file;
+    }
+
+    public FileCommand setFile(File file) {
+        this.file = file;
+        return this;
+    }
 }

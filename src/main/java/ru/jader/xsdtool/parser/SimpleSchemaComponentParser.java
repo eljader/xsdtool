@@ -18,14 +18,14 @@ import org.apache.xmlbeans.XmlObject;
 import ru.jader.xsdtool.parser.handler.Handler;
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
-public class SimpleXsdParser extends XsdParser {
+public class SimpleSchemaComponentParser extends SchemaComponentParser {
 	
 	private static String ELEMENT_DELIMITER = "/";
 	private static String ATTR_DELIMITER = ELEMENT_DELIMITER + "@";
 	
 	private Handler handler;
 	
-	public SimpleXsdParser(Handler handler) throws XmlException, IOException {
+	public SimpleSchemaComponentParser(Handler handler) throws XmlException, IOException {
 		this.handler = handler;
 	}
 	

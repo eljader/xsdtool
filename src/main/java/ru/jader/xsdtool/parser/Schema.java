@@ -9,28 +9,11 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeLoader;
 import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
-public class Schema {
+public abstract class Schema {
 	protected SchemaTypeSystem sts;
 	protected SchemaTypeLoader stl;
-	
-	public void load(File file) throws XmlException, IOException {
-		this.sts = XmlBeans
-			.compileXsd(
-				new XmlObject[]{XmlObject.Factory.parse(file)},
-				XmlBeans.getBuiltinTypeSystem(),
-				null
-			)
-		;
-		this.stl = XmlBeans
-			.typeLoaderUnion(
-				new SchemaTypeLoader[]{sts,XmlBeans.getBuiltinTypeSystem()}
-			)
-		;
-	}
 	
 	public SchemaGlobalElement findElement(QName name) {
 		return stl.findElement(name);
@@ -47,4 +30,6 @@ public class Schema {
 	public SchemaGlobalElement[] globalElements() {
 		return sts.globalElements();
 	}
+	
+	public abstract void load(File file) throws XmlException, IOException;
 }

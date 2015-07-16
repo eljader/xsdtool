@@ -15,11 +15,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.xmlbeans.SchemaComponent;
 
 import ru.jader.xsdtool.common.KeyValue;
+import ru.jader.xsdtool.gui.command.GenerateXlsxDocumentCommand;
 import ru.jader.xsdtool.gui.command.LoadSchemaFileCommand;
-import ru.jader.xsdtool.gui.listener.GenerateXlsResultListener;
+import ru.jader.xsdtool.gui.listener.PushButtonListener;
 import ru.jader.xsdtool.gui.listener.LoadFileListener;
 import ru.jader.xsdtool.gui.listener.SwitchButtonListener;
 import ru.jader.xsdtool.parser.Schema;
+import ru.jader.xsdtool.parser.XsdSchema;
 
 public class MainView extends FrameView {
 	
@@ -29,10 +31,6 @@ public class MainView extends FrameView {
 	
 	private Schema schema;
 	
-	public MainView() {
-		this.schema = new Schema();
-	}
-
 	@Override
 	protected void doRender(JFrame frame) {
 		JPanel panel = getPanel(frame);
@@ -68,7 +66,7 @@ public class MainView extends FrameView {
 		panel.add(parseButton);
 		
 		schemaCombo.addActionListener(new SwitchButtonListener(parseButton));
-		parseButton.addActionListener(new GenerateXlsResultListener(schemaCombo));
+		parseButton.addActionListener(new PushButtonListener(new GenerateXlsxDocumentCommand(schemaCombo)));
 
 		JTextField filePath = new JTextField();
 		filePath.setBounds(frame.getWidth() - 520, frame.getHeight() - 400, 220, 25);
@@ -80,7 +78,7 @@ public class MainView extends FrameView {
 		browseFile.addActionListener(new LoadFileListener(
 				"Load Schema",
 				new FileNameExtensionFilter(".xsd .wsdl", "xsd", "wsdl"),
-				new LoadSchemaFileCommand(filePath, schemaCombo, schema)
+				new LoadSchemaFileCommand(filePath, schemaCombo)
 			)
 		);
 		panel.add(browseFile);
