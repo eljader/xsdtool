@@ -18,63 +18,63 @@ import ru.jader.xsdtool.parser.XsdSchema;
 
 public final class LoadSchemaFileCommand extends FileCommand {
 
-	private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
-	private JTextField viewPath;
-	
-	public LoadSchemaFileCommand(
-		JTextField viewPath, 
-		JComboBox<KeyValue<String, SchemaComponent>> schemaList
-	) {
-		this.schemaList = schemaList;
-		this.viewPath = viewPath;
-	}
+    private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
+    private JTextField viewPath;
 
-	@Override
-	public void excute() {
-		try {		
-			Schema schema = getSchema(file);
-			viewPath.setText(file.getPath());
-			schemaList.removeAllItems();
-			
-			SchemaGlobalElement[] elements = schema.globalElements();
-			SchemaType[] types = schema.globalTypes();
-				
-			schemaList.addItem(new KeyValue<String, SchemaComponent>("", null));
-			
-			for(SchemaGlobalElement element: elements)
-				schemaList.addItem(new KeyValue<String, SchemaComponent>(
-					"element: " + element.getName().getLocalPart(), 
-					element
-				)
-			);
-			
-			for(SchemaType type: types)
-				schemaList.addItem(new KeyValue<String, SchemaComponent>(
-					"type: " + type.getName().getLocalPart(), 
-					type
-				)
-			);
-			
-			schemaList.setEditable(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public Schema getSchema(File file) throws XmlException, IOException {
-		String fileName = file.getName();
-		String ext = fileName.substring(fileName.lastIndexOf(".") +1 ).toLowerCase();
-		Schema schema = null;
-		
-		if(ext.equals("xsd"))
-			schema = new XsdSchema();			
-		if(ext.equals("wsdl"))
-			schema = new WsdlSchema();	
-		if(schema == null)
-			throw new RuntimeException(String.format("unsupported file extension .%s", ext));
-		
-		schema.load(file);
-		return schema;
-	}
+    public LoadSchemaFileCommand(
+        JTextField viewPath,
+        JComboBox<KeyValue<String, SchemaComponent>> schemaList
+    ) {
+        this.schemaList = schemaList;
+        this.viewPath = viewPath;
+    }
+
+    @Override
+    public void excute() {
+        try {
+            Schema schema = getSchema(file);
+            viewPath.setText(file.getPath());
+            schemaList.removeAllItems();
+
+            SchemaGlobalElement[] elements = schema.globalElements();
+            SchemaType[] types = schema.globalTypes();
+
+            schemaList.addItem(new KeyValue<String, SchemaComponent>("", null));
+
+            for(SchemaGlobalElement element: elements)
+                schemaList.addItem(new KeyValue<String, SchemaComponent>(
+                    "element: " + element.getName().getLocalPart(),
+                    element
+                )
+            );
+
+            for(SchemaType type: types)
+                schemaList.addItem(new KeyValue<String, SchemaComponent>(
+                    "type: " + type.getName().getLocalPart(),
+                    type
+                )
+            );
+
+            schemaList.setEditable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public Schema getSchema(File file) throws XmlException, IOException {
+        String fileName = file.getName();
+        String ext = fileName.substring(fileName.lastIndexOf(".") +1 ).toLowerCase();
+        Schema schema = null;
+
+        if(ext.equals("xsd"))
+            schema = new XsdSchema();
+        if(ext.equals("wsdl"))
+            schema = new WsdlSchema();
+        if(schema == null)
+            throw new RuntimeException(String.format("unsupported file extension .%s", ext));
+
+        schema.load(file);
+        return schema;
+    }
 }
