@@ -60,15 +60,11 @@ public class WsdlSchema extends Schema {
     }
 
     private XmlObject assembleSchema(Node node) throws XmlException {
-        Element element = (Element) node;
-        Map<String, String> map = new HashMap<String, String>();
-        getAttributies(node.getParentNode(), map);
-        addAttributies(element, map);
+        Map<String, String> attributies = new HashMap<String, String>();
+        getAttributies(node.getParentNode(), attributies);
+        addAttributies(node, attributies);
 
-        return
-            XmlObject.Factory
-                .parse((Node)element)
-        ;
+        return XmlObject.Factory.parse(node);
     }
 
     private Map<String, String> getAttributies(Node node, Map<String, String> map) {
@@ -87,7 +83,8 @@ public class WsdlSchema extends Schema {
         return map;
     }
 
-    private void addAttributies(Element element, Map<String, String> attributes) {
+    private void addAttributies(Node node, Map<String, String> attributes) {
+        Element element = (Element) node;
         for(Entry<String, String> attr : attributes.entrySet())
             if(isAllowedAttributie(attr.getKey()) && !element.hasAttribute(attr.getKey()))
                 element.setAttribute(attr.getKey(), attr.getValue())
