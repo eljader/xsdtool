@@ -1,8 +1,6 @@
 package ru.jader.xsdtool.gui.listener;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
@@ -10,7 +8,7 @@ import org.apache.xmlbeans.SchemaComponent;
 
 import ru.jader.xsdtool.common.KeyValue;
 
-public final class SwitchButtonListener implements ActionListener {
+public final class SwitchButtonListener extends LoggableActionListener {
 	
 	private JButton button;
 	
@@ -19,16 +17,19 @@ public final class SwitchButtonListener implements ActionListener {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent event) {	
+		try{
+			
+			JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = 
+				(JComboBox<KeyValue<String, SchemaComponent>>) event.getSource()
+			;
+			
+			KeyValue<String, SchemaComponent> item = 
+				(KeyValue<String, SchemaComponent>) schemaCombo.getSelectedItem()
+			;
+			
+			button.setEnabled(item.getValue() == null ? false: true);
 		
-		JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = 
-			(JComboBox<KeyValue<String, SchemaComponent>>) e.getSource()
-		;
-		
-		KeyValue<String, SchemaComponent> item = 
-			(KeyValue<String, SchemaComponent>) schemaCombo.getSelectedItem()
-		;
-		
-		button.setEnabled(item.getValue() == null ? false: true);
+		} catch (Exception exception) { logError(exception); }
 	}
 }

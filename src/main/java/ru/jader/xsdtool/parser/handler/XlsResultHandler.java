@@ -18,7 +18,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
-public class XlsResultHandler implements Handler {
+public class XlsResultHandler implements ParseHandler {
 	
 	private static short STYLE_HEADER = 0;
 	private static short STYLE_TYPE = 2;
@@ -50,11 +50,11 @@ public class XlsResultHandler implements Handler {
 		addValue(row, 5, unit.getDescription(), STYLE_LONG_TEXT);
 	}
 	
-	public void finalize() {	
+	public void finalize() throws ParseHandlerException {	
 		try {
 			workbook.write(writer);
 			writer.flush();
-		} catch (IOException e) { throw new RuntimeException(e); }
+		} catch (IOException e) { throw new ParseHandlerException(e); }
 	}
 	
 	private int getRowNum() {

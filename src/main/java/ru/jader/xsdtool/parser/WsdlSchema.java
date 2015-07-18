@@ -94,7 +94,6 @@ public class WsdlSchema extends Schema {
     private boolean isAllowedAttributie(String name) {
         if(ALLOWED_ATTRIBUTIES.contains(name))
             return true;
-
         if(ALLOWED_ATTRIBUTIES.contains(name.split(ATTRIBUTE_DELIMITER)[0]))
             return true;
 

@@ -15,7 +15,8 @@ import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-import ru.jader.xsdtool.parser.handler.Handler;
+import ru.jader.xsdtool.parser.handler.ParseHandler;
+import ru.jader.xsdtool.parser.handler.ParseHandlerException;
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
 public class SimpleSchemaComponentParser extends SchemaComponentParser {
@@ -23,9 +24,9 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
 	private static String ELEMENT_DELIMITER = "/";
 	private static String ATTR_DELIMITER = ELEMENT_DELIMITER + "@";
 	
-	private Handler handler;
+	private ParseHandler handler;
 	
-	public SimpleSchemaComponentParser(Handler handler) throws XmlException, IOException {
+	public SimpleSchemaComponentParser(ParseHandler handler) throws XmlException, IOException {
 		this.handler = handler;
 	}
 	
@@ -39,10 +40,14 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
 	}
 	
 	@Override
-	protected void process(String path, Object parseObject) {
-		handler
-			.handle(createXsdUnit(path, parseObject))
-		;
+	protected void process(String path, Object parseObject) throws ParseComponentException {
+		try {
+			handler
+				.handle(createXsdUnit(path, parseObject))
+			;
+		} catch (ParseHandlerException e) { 
+			throw new ParseComponentException(e); 
+		}
 	}
 	
 	@Override

@@ -9,7 +9,7 @@ import org.apache.xmlbeans.SchemaType;
 
 public abstract class SchemaComponentParser {
 	
-	public void parse(SchemaComponent component) {
+	public void parse(SchemaComponent component) throws ParseComponentException {
 		SchemaType type = null;
 		
 		if(component instanceof SchemaType)
@@ -24,7 +24,7 @@ public abstract class SchemaComponentParser {
 		parseType(type, new String());
 	}
 
-	private void parseElement(SchemaLocalElement element, String path) {
+	private void parseElement(SchemaLocalElement element, String path) throws ParseComponentException {
 		SchemaType type = element.getType();
 		boolean isNotRecursive = !this.isRecursive(path, element);
 		path = this.rebuildPath(path, element);
@@ -35,7 +35,7 @@ public abstract class SchemaComponentParser {
 			this.process(path, element);
 	}
 
-	private void parseType(SchemaType type, String path) {
+	private void parseType(SchemaType type, String path) throws ParseComponentException {
 		SchemaProperty[] attributes = type.getAttributeProperties();
 
 		for (int i = 0; i < attributes.length; i++) {
@@ -60,7 +60,7 @@ public abstract class SchemaComponentParser {
 		
 	protected abstract String rebuildPath(String path, SchemaLocalElement element);
 	
-	protected abstract void process(String path, Object parseObject);
+	protected abstract void process(String path, Object parseObject) throws ParseComponentException;
 	
 	protected abstract boolean isRecursive(String path, SchemaLocalElement element);
 }

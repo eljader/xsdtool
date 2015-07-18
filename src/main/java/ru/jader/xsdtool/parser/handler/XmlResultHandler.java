@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 import ru.jader.xsdtool.parser.model.XsdUnit;
 
-public class XmlResultHandler implements Handler {
+public class XmlResultHandler implements ParseHandler {
 	
 	private String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 	private String ROOT_NAME = "units";
@@ -51,8 +51,7 @@ public class XmlResultHandler implements Handler {
 	}
 	
 	private String getIdent(int size) {
-		String ident = "";
-		
+		String ident = "";	
 		for(int i=0; i < size; i++)
 			ident += " ";
 			

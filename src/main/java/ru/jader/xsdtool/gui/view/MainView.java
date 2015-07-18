@@ -1,6 +1,9 @@
 package ru.jader.xsdtool.gui.view;
 
 import java.awt.event.WindowAdapter;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,6 +26,8 @@ import ru.jader.xsdtool.gui.listener.SwitchButtonListener;
 
 public class MainView extends FrameView {
 
+	private static Logger log = Logger.getLogger(MainView.class.getName());
+	
     private static String WINDOW_NAME = "xsdtool";
     private static int WINDOW_WIDTH = 800;
     private static int WINDOW_HEIGHT = 600;
@@ -61,8 +66,8 @@ public class MainView extends FrameView {
         parseButton.setEnabled(false);
         panel.add(parseButton);
 
-        schemaCombo.addActionListener(new SwitchButtonListener(parseButton));
-        parseButton.addActionListener(new PushButtonListener(new GenerateXlsxDocumentCommand(schemaCombo)));
+        schemaCombo.addActionListener(new SwitchButtonListener(parseButton).setLogger(log));
+        parseButton.addActionListener(new PushButtonListener(new GenerateXlsxDocumentCommand(schemaCombo)).setLogger(log));
 
         JTextField filePath = new JTextField();
         filePath.setBounds(frame.getWidth() - 520, frame.getHeight() - 400, 220, 25);
@@ -76,6 +81,7 @@ public class MainView extends FrameView {
                 new FileNameExtensionFilter(".xsd .wsdl", "xsd", "wsdl"),
                 new LoadSchemaFileCommand(filePath, schemaCombo)
             )
+        		.setLogger(log)
         );
         panel.add(browseFile);
 
@@ -86,7 +92,9 @@ public class MainView extends FrameView {
         JTextArea queryTextArea = new JTextArea(500, 200);
         queryTextArea.setBounds(0, indentTop, textAreaWidth, textAreaHeight);
         queryTextArea.setEditable(false);
-
+        
+        addLogHandler(queryTextArea);
+        
         JScrollPane scrollPane = new JScrollPane(queryTextArea);
         scrollPane.setBounds(0, indentTop, textAreaWidth, textAreaHeight);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -94,5 +102,18 @@ public class MainView extends FrameView {
 
         panel.add(scrollPane);
         return panel;
+    }
+    
+    private void addLogHandler(JTextArea appender) {
+        log.addHandler(new Handler() {
+
+            public void publish(LogRecord logRecord) {
+                appender.append(logRecord.getMessage() + "\n");
+                appender.setCaretPosition(appender.getText().length());
+            }
+
+            public void flush() {}
+            public void close() {}
+        });
     }
 }

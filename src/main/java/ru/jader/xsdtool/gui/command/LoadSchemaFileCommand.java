@@ -17,8 +17,8 @@ import ru.jader.xsdtool.parser.WsdlSchema;
 import ru.jader.xsdtool.parser.XsdSchema;
 
 public final class LoadSchemaFileCommand extends FileCommand {
-
-    private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
+	
+	private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
     private JTextField viewPath;
 
     public LoadSchemaFileCommand(
@@ -30,7 +30,7 @@ public final class LoadSchemaFileCommand extends FileCommand {
     }
 
     @Override
-    public void excute() {
+    public void excute() throws CommandException {
         try {
             Schema schema = getSchema(file);
             viewPath.setText(file.getPath());
@@ -54,10 +54,9 @@ public final class LoadSchemaFileCommand extends FileCommand {
                     type
                 )
             );
-
             schemaList.setEditable(true);
         } catch (Exception e) {
-            e.printStackTrace();
+        	throw new CommandException(e);
         }
     }
 
