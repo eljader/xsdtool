@@ -12,16 +12,16 @@ import ru.jader.xsdtool.gui.view.View;
 public class Application
 {
     private static Logger logger = Logger.getLogger(MainView.class.getName());
-  
+
     public static void main(String[] args) throws Exception
     {
         try {
             View mainWindow = new MainView();
             mainWindow.render();
         } catch (Exception e) {
-        	StringWriter errors = new StringWriter();
-        	e.printStackTrace(new PrintWriter(errors));
-        	logger.log(Level.SEVERE, errors.toString());
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            logger.log(Level.SEVERE, errors.toString());
         }
     }
 }
