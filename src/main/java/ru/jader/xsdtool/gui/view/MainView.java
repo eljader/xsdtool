@@ -56,13 +56,13 @@ public class MainView extends FrameView {
         panel.setLayout(null);
 
         JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = new JComboBox<KeyValue<String, SchemaComponent>>();
-        schemaCombo.setBounds(frame.getWidth() - 520, frame.getHeight() - 350, 220, 25);
+        schemaCombo.setBounds(20, 60, frame.getWidth() - 220, 25);
         schemaCombo.setEditable(false);
         schemaCombo.setEditable(false);
         panel.add(schemaCombo);
 
-        JButton parseButton = new JButton("make template");
-        parseButton.setBounds(frame.getWidth() - 280, frame.getHeight() - 350, 120, 25);
+        JButton parseButton = new JButton("Make Template");
+        parseButton.setBounds(frame.getWidth() - 180, 60, 150, 25);
         parseButton.setEnabled(false);
         panel.add(parseButton);
 
@@ -76,12 +76,12 @@ public class MainView extends FrameView {
             );
 
         JTextField filePath = new JTextField();
-        filePath.setBounds(frame.getWidth() - 520, frame.getHeight() - 400, 220, 25);
+        filePath.setBounds(20, 10, frame.getWidth() - 220, 25);
         filePath.setEditable(false);
         panel.add(filePath);
 
-        JButton browseFile = new JButton("load schema");
-        browseFile.setBounds(frame.getWidth() - 280, frame.getHeight() - 400, 120, 25);
+        JButton browseFile = new JButton("Load Schema");
+        browseFile.setBounds(frame.getWidth() - 180, 10, 150, 25);
         browseFile
             .addActionListener(
                 new LoadFileListener(
@@ -95,20 +95,20 @@ public class MainView extends FrameView {
 
         panel.add(browseFile);
 
+        int marginLeft = 5;
         int textAreaHeight = frame.getHeight() / 3;
-        int textAreaWidth = frame.getWidth() - 20;
-        int indentTop = frame.getHeight() - textAreaHeight - 50;
+        int textAreaWidth = frame.getWidth() - (marginLeft * 2);
+        int marginTop = frame.getHeight() - textAreaHeight - 50;
 
-        JTextArea queryTextArea = new JTextArea(500, 200);
-        queryTextArea.setBounds(0, indentTop, textAreaWidth, textAreaHeight);
+        JTextArea queryTextArea = new JTextArea(1, 1);
+        queryTextArea.setBounds(marginLeft, marginTop, textAreaWidth, textAreaHeight);
         queryTextArea.setEditable(false);
-
         addLogHandler(queryTextArea);
 
         JScrollPane scrollPane = new JScrollPane(queryTextArea);
-        scrollPane.setBounds(0, indentTop, textAreaWidth, textAreaHeight);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBounds(marginLeft, marginTop, textAreaWidth, textAreaHeight);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         panel.add(scrollPane);
         return panel;

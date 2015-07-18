@@ -7,26 +7,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class LoggableActionListener implements ActionListener {
-	
-	private Logger logger;
-	
-	public ActionListener setLogger(Logger logger) {
-		this.logger = logger;
-		return this;
-	}
-	
-	protected void logError(Exception e) {
-		if(logger != null) {
-			logger.log(Level.SEVERE, assembleError(e));
-		} else {
-			System.err.println(e.getMessage());
-			e.printStackTrace(System.err);
-		}
-	}
-	
-	private String assembleError(Exception e) {
-    	StringWriter errors = new StringWriter();
-    	e.printStackTrace(new PrintWriter(errors));	
-		return errors.toString();
-	}
+
+    private Logger logger;
+
+    public ActionListener setLogger(Logger logger) {
+        this.logger = logger;
+        return this;
+    }
+
+    protected void logError(Exception e) {
+        if(logger != null) {
+            logger.log(Level.SEVERE, assembleError(e));
+        } else {
+            System.err.println(e.getMessage());
+            e.printStackTrace(System.err);
+        }
+    }
+
+    protected void logMessage(String message) {
+        if(logger != null)
+            logger.log(Level.INFO, message);
+        else
+            System.out.println(message);
+    }
+
+    private String assembleError(Exception e) {
+        StringWriter errors = new StringWriter();
+        e.printStackTrace(new PrintWriter(errors));
+        return errors.toString();
+    }
 }
