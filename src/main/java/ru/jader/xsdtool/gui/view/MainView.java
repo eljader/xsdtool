@@ -103,6 +103,8 @@ public class MainView extends FrameView {
         JTextArea queryTextArea = new JTextArea(1, 1);
         queryTextArea.setBounds(marginLeft, marginTop, textAreaWidth, textAreaHeight);
         queryTextArea.setEditable(false);
+        queryTextArea.setLineWrap(true);
+        queryTextArea.setWrapStyleWord(true);
         addLogHandler(queryTextArea);
 
         JScrollPane scrollPane = new JScrollPane(queryTextArea);
