@@ -31,6 +31,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.9</version>
         </dependency>
+        <dependency>
+            <groupId>net.java.dev.glazedlists</groupId>
+            <artifactId>glazedlists_java15</artifactId>
+            <version>1.9.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

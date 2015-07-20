@@ -2,6 +2,8 @@ package ru.jader.xsdtool.gui.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -11,15 +13,19 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ru.jader.xsdtool.common.KeyValue;
 import ru.jader.xsdtool.parser.Schema;
 import ru.jader.xsdtool.parser.WsdlSchema;
 import ru.jader.xsdtool.parser.XsdSchema;
 
 public final class LoadSchemaFileCommand extends FileCommand {
-	
-	private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
+
+    private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
     private JTextField viewPath;
+    private AutoCompleteSupport<Object> autocomplete;
 
     public LoadSchemaFileCommand(
         JTextField viewPath,
@@ -34,34 +40,32 @@ public final class LoadSchemaFileCommand extends FileCommand {
         try {
             Schema schema = getSchema(file);
             viewPath.setText(file.getPath());
-            schemaList.removeAllItems();
+            schemaList.setEditable(true);
 
             SchemaGlobalElement[] elements = schema.globalElements();
             SchemaType[] types = schema.globalTypes();
-
-            schemaList.addItem(new KeyValue<String, SchemaComponent>("", null));
+            List<KeyValue<String, SchemaComponent>> itemList =
+                    new ArrayList<KeyValue<String, SchemaComponent>>();
 
             for(SchemaGlobalElement element: elements)
-                schemaList.addItem(new KeyValue<String, SchemaComponent>(
-                    "element: " + element.getName().getLocalPart(),
-                    element
-                )
+                itemList.add(assembleItem(element, "element"));
+            for(SchemaType type: types)
+                itemList.add(assembleItem(type, "type"));
+
+            if(autocomplete != null) autocomplete.uninstall();
+
+            autocomplete = AutoCompleteSupport.install(
+                schemaList,
+                GlazedLists.eventListOf(itemList.toArray())
             );
 
-            for(SchemaType type: types)
-                schemaList.addItem(new KeyValue<String, SchemaComponent>(
-                    "type: " + type.getName().getLocalPart(),
-                    type
-                )
-            );
-            schemaList.setEditable(true);
+            autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
         } catch (Exception e) {
-        	throw new CommandException(e);
+            throw new CommandException(e);
         }
     }
 
-
-    public Schema getSchema(File file) throws XmlException, IOException {
+    private Schema getSchema(File file) throws XmlException, IOException {
         String fileName = file.getName();
         String ext = fileName.substring(fileName.lastIndexOf(".") +1 ).toLowerCase();
         Schema schema = null;
@@ -75,5 +79,14 @@ public final class LoadSchemaFileCommand extends FileCommand {
 
         schema.load(file);
         return schema;
+    }
+
+    private KeyValue<String, SchemaComponent>assembleItem(SchemaComponent component, String prefix) {
+        return
+            new KeyValue<String, SchemaComponent>(
+                String.format("%s :%s", prefix, component.getName().getLocalPart()),
+                component
+            )
+        ;
     }
 }
