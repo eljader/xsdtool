@@ -1,12 +1,19 @@
 package ru.jader.xsdtool.gui.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,6 +23,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.xmlbeans.SchemaComponent;
+
 import ru.jader.xsdtool.gui.command.GenerateXlsxDocumentCommand;
 import ru.jader.xsdtool.gui.command.LoadSchemaFileCommand;
 import ru.jader.xsdtool.gui.listener.PushButtonListener;
@@ -51,52 +59,91 @@ public class MainView extends FrameView {
 
     protected JPanel getPanel(JFrame frame) {
         JPanel panel = new JPanel();
-        panel.setLayout(null);
+        panel.add(getControlPane());
+      //  panel.add(getHeaderEditorPane());
+        panel.add(getOutputPane());
 
-        JComboBox<SchemaComponent> schemaCombo = new JComboBox<SchemaComponent>();
-        schemaCombo.setBounds(20, 60, frame.getWidth() - 220, 25);
-        schemaCombo.setEditable(false);
-        schemaCombo.setEditable(false);
-        panel.add(schemaCombo);
+        return panel;
+    }
 
-        JButton parseButton = new JButton("Make Template");
-        parseButton.setBounds(frame.getWidth() - 180, 60, 150, 25);
-        parseButton.setEnabled(false);
-        panel.add(parseButton);
+    private JPanel getControlPane() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(frame.getWidth(), 100));
 
-        schemaCombo.addActionListener(new SwitchButtonListener(parseButton).setLogger(logger));
-        parseButton
-            .addActionListener(
-                new PushButtonListener(
-                    new GenerateXlsxDocumentCommand(schemaCombo)
-                )
-                .setLogger(logger)
-            );
+        JPanel addFilePane = new JPanel();
+        addFilePane.setLayout(new BoxLayout(addFilePane, BoxLayout.X_AXIS));
+        addFilePane.setPreferredSize(new Dimension(frame.getWidth(), 100));
+
+        JPanel makeTemplatePane = new JPanel();
+        makeTemplatePane.setLayout(new BoxLayout(makeTemplatePane, BoxLayout.X_AXIS));
+        makeTemplatePane.setPreferredSize(new Dimension(frame.getWidth(), 100));
 
         JTextField filePath = new JTextField();
-        filePath.setBounds(20, 10, frame.getWidth() - 220, 25);
+        filePath.setMaximumSize(new Dimension(frame.getWidth() - 220, 25));
+        filePath.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
         filePath.setEditable(false);
-        panel.add(filePath);
 
         JButton browseFile = new JButton("Load Schema");
-        browseFile.setBounds(frame.getWidth() - 180, 10, 150, 25);
-        browseFile
-            .addActionListener(
-                new LoadFileListener(
-                    "Load Schema",
-                    new FileNameExtensionFilter(".xsd .wsdl", "xsd", "wsdl"),
-                    new LoadSchemaFileCommand(filePath, schemaCombo)
-                )
-                .setLogger(logger)
-            )
-        ;
+        browseFile.setMaximumSize(new Dimension(150, 25));
+        browseFile.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
 
-        panel.add(browseFile);
+        JComboBox<SchemaComponent> schemaCombo = new JComboBox<SchemaComponent>();
+        schemaCombo.setMaximumSize(new Dimension(frame.getWidth() - 220, 25));
+        schemaCombo.setAlignmentY(JComponent.TOP_ALIGNMENT);
+        schemaCombo.setEditable(false);
+
+        JButton parseButton = new JButton("Make Template");
+        parseButton.setMaximumSize(new Dimension(150, 25));
+        parseButton.setAlignmentY(JComponent.TOP_ALIGNMENT);
+        parseButton.setEnabled(false);
+
+        schemaCombo.addActionListener(new SwitchButtonListener(parseButton).setLogger(logger));
+
+        parseButton.addActionListener(
+            new PushButtonListener(
+                new GenerateXlsxDocumentCommand(schemaCombo)
+            )
+            .setLogger(logger)
+        );
+
+        browseFile.addActionListener(
+            new LoadFileListener(
+                "Load Schema",
+                new FileNameExtensionFilter(".xsd .wsdl", "xsd", "wsdl"),
+                new LoadSchemaFileCommand(filePath, schemaCombo)
+            )
+            .setLogger(logger)
+        );
+
+        addFilePane.add(filePath);
+        addFilePane.add(Box.createRigidArea(new Dimension(20,0)));
+        addFilePane.add(browseFile);
+
+        makeTemplatePane.add(schemaCombo);
+        makeTemplatePane.add(Box.createRigidArea(new Dimension(20,10)));
+        makeTemplatePane.add(parseButton);
+
+        panel.add(addFilePane);
+        panel.add(makeTemplatePane);
+
+        return panel;
+    }
+
+    private JPanel getHeaderEditorPane() {
+        JPanel panel = new JPanel();
+        return panel;
+    }
+
+    private JPanel getOutputPane() {
+        JPanel panel = new JPanel(new BorderLayout());
 
         int marginLeft = 5;
         int textAreaHeight = frame.getHeight() / 3;
         int textAreaWidth = frame.getWidth() - (marginLeft * 2);
         int marginTop = frame.getHeight() - textAreaHeight - 50;
+
+        panel.setPreferredSize(new Dimension(textAreaWidth, textAreaHeight));
 
         JTextArea queryTextArea = new JTextArea(1, 1);
         queryTextArea.setBounds(marginLeft, marginTop, textAreaWidth, textAreaHeight);
@@ -109,8 +156,8 @@ public class MainView extends FrameView {
         scrollPane.setBounds(marginLeft, marginTop, textAreaWidth, textAreaHeight);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
         panel.add(scrollPane);
+
         return panel;
     }
 
