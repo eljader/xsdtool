@@ -97,8 +97,6 @@ public final class LoadSchemaFileCommand extends FileCommand {
         }
 
         @Override
-        public Object parseObject(String source, ParsePosition pos) {
-            throw new RuntimeException("unimplemented method");
-        }
+        public Object parseObject(String source, ParsePosition pos) { return null; }
     }
 }

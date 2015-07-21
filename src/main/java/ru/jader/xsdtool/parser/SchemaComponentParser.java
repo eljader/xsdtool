@@ -14,10 +14,8 @@ public abstract class SchemaComponentParser {
 
         if(component instanceof SchemaType)
             type = (SchemaType) component;
-
         if(component instanceof SchemaGlobalElement)
             type = ((SchemaGlobalElement) component).getType();
-
         if(type == null)
             throw new RuntimeException(String.format("not implemented for %s", component.getClass()));
 
