@@ -2,7 +2,11 @@ package ru.jader.xsdtool.gui.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -16,22 +20,21 @@ import org.apache.xmlbeans.XmlException;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
-import ru.jader.xsdtool.common.KeyValue;
 import ru.jader.xsdtool.parser.Schema;
 import ru.jader.xsdtool.parser.WsdlSchema;
 import ru.jader.xsdtool.parser.XsdSchema;
 
 public final class LoadSchemaFileCommand extends FileCommand {
 
-    private JComboBox<KeyValue<String, SchemaComponent>> schemaList;
+    private JComboBox<SchemaComponent> schemaCombo;
     private JTextField viewPath;
-    private AutoCompleteSupport<Object> autocomplete;
+    private AutoCompleteSupport<SchemaComponent> autocomplete;
 
     public LoadSchemaFileCommand(
         JTextField viewPath,
-        JComboBox<KeyValue<String, SchemaComponent>> schemaList
+        JComboBox<SchemaComponent> schemaCombo
     ) {
-        this.schemaList = schemaList;
+        this.schemaCombo = schemaCombo;
         this.viewPath = viewPath;
     }
 
@@ -40,23 +43,19 @@ public final class LoadSchemaFileCommand extends FileCommand {
         try {
             Schema schema = getSchema(file);
             viewPath.setText(file.getPath());
-            schemaList.setEditable(true);
+            schemaCombo.setEditable(true);
+            List<SchemaComponent> items = new ArrayList<SchemaComponent>();
 
-            SchemaGlobalElement[] elements = schema.globalElements();
-            SchemaType[] types = schema.globalTypes();
-            List<KeyValue<String, SchemaComponent>> itemList =
-                    new ArrayList<KeyValue<String, SchemaComponent>>();
-
-            for(SchemaGlobalElement element: elements)
-                itemList.add(assembleItem(element, "element"));
-            for(SchemaType type: types)
-                itemList.add(assembleItem(type, "type"));
+            items.addAll(Arrays.asList(schema.globalElements()));
+            items.addAll(Arrays.asList(schema.globalTypes()));
 
             if(autocomplete != null) autocomplete.uninstall();
 
             autocomplete = AutoCompleteSupport.install(
-                schemaList,
-                GlazedLists.eventListOf(itemList.toArray())
+                schemaCombo,
+                GlazedLists.eventListOf(items.toArray(new SchemaComponent[items.size()])),
+                GlazedLists.textFilterator(SchemaComponent.class, "Name"),
+                new SchemaComponentFormat()
             );
 
             autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
@@ -81,12 +80,25 @@ public final class LoadSchemaFileCommand extends FileCommand {
         return schema;
     }
 
-    private KeyValue<String, SchemaComponent>assembleItem(SchemaComponent component, String prefix) {
-        return
-            new KeyValue<String, SchemaComponent>(
-                String.format("%s :%s", prefix, component.getName().getLocalPart()),
-                component
-            )
-        ;
+    private class SchemaComponentFormat extends Format {
+        private static final long serialVersionUID = 2122226791526331666L;
+        @Override
+        public StringBuffer format(Object object, StringBuffer appender, FieldPosition pos) {
+            if(object instanceof SchemaGlobalElement)
+                appender.append(assebmleText((SchemaComponent) object, "element"));
+            if(object instanceof SchemaType)
+                appender.append(assebmleText((SchemaComponent) object, "type"));
+
+            return appender;
+        }
+
+        private String assebmleText(SchemaComponent component, String type) {
+            return String.format("%s (%s)", component.getName().getLocalPart(), type);
+        }
+
+        @Override
+        public Object parseObject(String source, ParsePosition pos) {
+            throw new RuntimeException("unimplemented method");
+        }
     }
 }

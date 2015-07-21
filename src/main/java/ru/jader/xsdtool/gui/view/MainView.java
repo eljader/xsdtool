@@ -16,8 +16,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.xmlbeans.SchemaComponent;
-
-import ru.jader.xsdtool.common.KeyValue;
 import ru.jader.xsdtool.gui.command.GenerateXlsxDocumentCommand;
 import ru.jader.xsdtool.gui.command.LoadSchemaFileCommand;
 import ru.jader.xsdtool.gui.listener.PushButtonListener;
@@ -55,7 +53,7 @@ public class MainView extends FrameView {
         JPanel panel = new JPanel();
         panel.setLayout(null);
 
-        JComboBox<KeyValue<String, SchemaComponent>> schemaCombo = new JComboBox<KeyValue<String, SchemaComponent>>();
+        JComboBox<SchemaComponent> schemaCombo = new JComboBox<SchemaComponent>();
         schemaCombo.setBounds(20, 60, frame.getWidth() - 220, 25);
         schemaCombo.setEditable(false);
         schemaCombo.setEditable(false);

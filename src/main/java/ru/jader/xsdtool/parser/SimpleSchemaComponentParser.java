@@ -115,7 +115,9 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
 
                 if(facet != null)
                     addLineSeparator(description)
-                        .append(facetEntry.getKey() + "=" + facet.getStringValue())
+                        .append(
+                            String.format("%s=$s", facetEntry.getKey(), facet.getStringValue())
+                        )
                 ;
             }
         }
