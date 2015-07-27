@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -40,7 +43,7 @@ public class MainView extends FrameView {
 
     @Override
     protected void doRender(JFrame frame) {
-        JPanel panel = getPanel(frame);
+        JPanel panel = getContentPanel();
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -57,7 +60,7 @@ public class MainView extends FrameView {
         return new ViewSettings(WINDOW_NAME, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
-    protected JPanel getPanel(JFrame frame) {
+    protected JPanel getContentPanel() {
         JPanel panel = new JPanel();
         panel.add(getControlPane());
       //  panel.add(getHeaderEditorPane());
@@ -71,22 +74,27 @@ public class MainView extends FrameView {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setPreferredSize(new Dimension(frame.getWidth(), 100));
 
-        JPanel addFilePane = new JPanel();
-        addFilePane.setLayout(new BoxLayout(addFilePane, BoxLayout.X_AXIS));
+        JPanel addFilePane = new JPanel(new GridBagLayout());
         addFilePane.setPreferredSize(new Dimension(frame.getWidth(), 100));
+        addFilePane.setBorder(BorderFactory.createLineBorder(Color.black));
+
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.gridwidth = GridBagConstraints.BOTH;
 
         JPanel makeTemplatePane = new JPanel();
         makeTemplatePane.setLayout(new BoxLayout(makeTemplatePane, BoxLayout.X_AXIS));
         makeTemplatePane.setPreferredSize(new Dimension(frame.getWidth(), 100));
+        makeTemplatePane.setBorder(BorderFactory.createLineBorder(Color.black));
 
         JTextField filePath = new JTextField();
         filePath.setMaximumSize(new Dimension(frame.getWidth() - 220, 25));
-        filePath.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
         filePath.setEditable(false);
 
         JButton browseFile = new JButton("Load Schema");
-        browseFile.setMaximumSize(new Dimension(150, 25));
-        browseFile.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
+        browseFile.setPreferredSize(new Dimension(150, 25));
 
         JComboBox<SchemaComponent> schemaCombo = new JComboBox<SchemaComponent>();
         schemaCombo.setMaximumSize(new Dimension(frame.getWidth() - 220, 25));
@@ -116,9 +124,8 @@ public class MainView extends FrameView {
             .setLogger(logger)
         );
 
-        addFilePane.add(filePath);
-        addFilePane.add(Box.createRigidArea(new Dimension(20,0)));
-        addFilePane.add(browseFile);
+        addFilePane.add(filePath, constraints);
+        addFilePane.add(browseFile, constraints);
 
         makeTemplatePane.add(schemaCombo);
         makeTemplatePane.add(Box.createRigidArea(new Dimension(20,10)));
