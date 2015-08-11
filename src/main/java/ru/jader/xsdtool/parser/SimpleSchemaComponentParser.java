@@ -83,7 +83,7 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
     }
 
     private String assembleType(SchemaType type) {
-        if(type.isPrimitiveType())
+        if(type.isPrimitiveType() || type.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE)
             return type.getName().getLocalPart();
         else if(type.getContentModel() != null)
             return type.getName().toString();

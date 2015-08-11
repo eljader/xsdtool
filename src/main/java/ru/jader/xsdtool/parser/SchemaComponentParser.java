@@ -43,7 +43,7 @@ public abstract class SchemaComponentParser {
 
         SchemaParticle particle = type.getContentModel();
 
-        if(particle == null) {
+        if(particle == null || type.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE) {
             this.process(path, type);
         }
         else if(particle.countOfParticleChild() == 0) {
