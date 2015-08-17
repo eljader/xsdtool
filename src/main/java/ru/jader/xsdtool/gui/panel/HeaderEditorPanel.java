@@ -1,9 +1,12 @@
 package ru.jader.xsdtool.gui.panel;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 public class HeaderEditorPanel extends JPanel {
 
@@ -14,36 +17,99 @@ public class HeaderEditorPanel extends JPanel {
     }
 
     protected void initialize() {
-        String[] columnNames = { "Name", "Last modified", "Type", "Size" };
-
-        String[][] data = { { "addins", "02.11.2006 19:15", "Folder", "" },
-                { "AppPatch", "03.10.2006 14:10", "Folder", "" },
-                { "assembly", "02.11.2006 14:20", "Folder", "" },
-                { "Boot", "13.10.2007 10:46", "Folder", "" },
-                { "Branding", "13.10.2007 12:10", "Folder", "" },
-                { "Cursors", "23.09.2006 16:34", "Folder", "" },
-                { "Debug", "07.12.2006 17:45", "Folder", "" },
-                { "Fonts", "03.10.2006 14:08", "Folder", "" },
-                { "Help", "08.11.2006 18:23", "Folder", "" },
-                { "explorer.exe", "18.10.2006 14:13", "File", "2,93MB" },
-                { "helppane.exe", "22.08.2006 11:39", "File", "4,58MB" },
-                { "twunk.exe", "19.08.2007 10:37", "File", "1,08MB" },
-                { "nsreg.exe", "07.08.2007 11:14", "File", "2,10MB" },
-                { "avisp.exe", "17.12.2007 16:58", "File", "12,67MB" }, };
-
-        JTable table = new JTable(data, columnNames);
+        JTable table = new JTable(getTableModel());
 
         table.setCellSelectionEnabled(true);
 
-        HeaderEditorPopupPanel p = new HeaderEditorPopupPanel();
+        HeaderEditorPopupPanel popup = new HeaderEditorPopupPanel(table);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEtchedBorder());
 
-        table.addMouseListener(p.getListener(table));
+        table.addMouseListener(popup.getListener());
 
         this.add(table);
-        this.add(p);
+        this.add(popup);
     }
 
+    private AbstractTableModel getTableModel() {
+        DefaultTableModel model = new DefaultTableModel();
+
+        model.setValueAt("test", 0, 0);
+        model.setValueAt("test1", 1, 0);
+        model.setValueAt("test2", 0, 1);
+        model.setValueAt("test3", 1, 1);
+        model.setValueAt("test3", 2, 1);
+        model.setValueAt("test2", 0, 2);
+
+        return model;
+    }
+
+    class DefaultTableModel extends AbstractTableModel {
+        private static final long serialVersionUID = -1358300499280932689L;
+        private List<String> columnNames = new ArrayList<String>();
+        private ArrayList<List<Object>> data = new ArrayList<List<Object>>();
+
+        public int getColumnCount() {
+            return columnNames.size();
+        }
+
+        public int getRowCount() {
+            int max = 0;
+            for(List<Object> col : data)
+                if(col.size() > max)
+                    max = col.size();
+
+            return max;
+        }
+
+        public String getColumnName(int col) {
+            return columnNames.get(col);
+        }
+
+        public Object getValueAt(int row, int col) {
+            try {
+                return data.get(col).get(row);
+            } catch (IndexOutOfBoundsException e) {
+                return new String();
+            }
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
+        public boolean isCellEditable(int row, int col) {
+            return true;
+        }
+
+        public void removeRow(int row) {
+            for(List<Object> col : data) {
+                try {
+                    col.remove(row);
+                } catch (IndexOutOfBoundsException e) {}
+            }
+
+            fireTableRowsDeleted(row, row);
+        }
+
+        public void removeColumn(int col) {
+          try {
+                columnNames.remove(col);
+                data.remove(col);
+          } catch (IndexOutOfBoundsException e) {}
+        }
+
+        public void setValueAt(Object value, int row, int col) {
+            try {
+                data.get(col);
+            } catch (IndexOutOfBoundsException e) {
+                 columnNames.add(col, value.toString());
+                 data.add(col, new ArrayList<Object>());
+            }
+
+            data.get(col).add(row, value);
+            fireTableCellUpdated(row, col);
+        }
+    }
 }
