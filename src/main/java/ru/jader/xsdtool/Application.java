@@ -15,7 +15,7 @@ public class Application
 
     public static void main(String[] args) throws Exception
     {
-        try {
+    	try {
             View mainWindow = new MainView(logger);
             mainWindow.render();
         } catch (Exception e) {

@@ -13,8 +13,7 @@ import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-
-import ru.jader.xsdtool.gui.panel.HeaderEditorPanel.DefaultTableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class HeaderEditorPopupPanel extends JPanel {
 
@@ -31,13 +30,32 @@ public class HeaderEditorPopupPanel extends JPanel {
                 JTable table = (JTable) component;
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-                if(event.getActionCommand().equals("delete all row")) {
+                if(event.getActionCommand().equals("delete row")) {
                     model.removeRow(table.getSelectedRow());
                 }
 
-                if(event.getActionCommand().equals("delete all col")) {
+                if(event.getActionCommand().equals("delete col")) {
                     table.removeColumn(table.getColumnModel().getColumn(table.getSelectedColumn()));
-                    model.removeColumn(table.getSelectedColumn());
+                }
+
+                if(event.getActionCommand().equals("add row")) {
+                	Object[] row = new Object[model.getColumnCount()];
+                	for(int cell = 0; cell < model.getColumnCount(); cell++)
+                		row[cell] = "";
+
+                	model.addRow(row);
+                }
+
+                if(event.getActionCommand().equals("add col")) {
+                	model.addColumn("");
+                }
+
+                if(event.getActionCommand().equals("combine")) {
+
+                }
+
+                if(event.getActionCommand().equals("split")) {
+
                 }
 
                 System.out.println("action: " + event.getActionCommand());
@@ -57,10 +75,10 @@ public class HeaderEditorPopupPanel extends JPanel {
         popup.add(item = new JMenuItem("add col"));
         item.setHorizontalTextPosition(JMenuItem.RIGHT);
         item.addActionListener(menuListener);
-        popup.add(item = new JMenuItem("delete all row"));
+        popup.add(item = new JMenuItem("delete row"));
         item.setHorizontalTextPosition(JMenuItem.RIGHT);
         item.addActionListener(menuListener);
-        popup.add(item = new JMenuItem("delete all col"));
+        popup.add(item = new JMenuItem("delete col"));
         item.setHorizontalTextPosition(JMenuItem.RIGHT);
         item.addActionListener(menuListener);
 
