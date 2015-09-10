@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import ru.jader.xsdtool.gui.common.control.* ?>
+
+<GridPane alignment="CENTER" prefHeight="455.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.jader.xsdtool.gui.controller.MainController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.0" minWidth="0.0" prefWidth="550.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.0" minWidth="0.0" prefWidth="0.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="188.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="370.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="370.0" minHeight="10.0" prefHeight="152.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="370.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TextArea fx:id="output" editable="false" prefHeight="141.0" prefWidth="550.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="9.0" />
+         </font></TextArea>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS">
+         <children>
+            <TextField fx:id="filepath" editable="false" prefHeight="25.0" prefWidth="409.0" VBox.vgrow="NEVER" />
+            <ComboBox fx:id="schemaCombo" maxWidth="Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="561.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></ComboBox>
+         </children>
+      </VBox>
+      <FlowPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="23.0" prefWidth="550.0" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="makeTemplateButton" disable="true" mnemonicParsing="false" onAction="#makeTemplate" prefHeight="25.0" prefWidth="125.0" text="make template" />
+            <Button mnemonicParsing="false" onAction="#loadSchema" prefHeight="25.0" prefWidth="125.0" text="load schema">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </FlowPane>
+   </children>
+   <padding>
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+</GridPane>
