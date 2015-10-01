@@ -143,7 +143,7 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
             String[] enums = new String[enumEntries.length];
 
             for(int i = 0; i < enumEntries.length; i++)
-                enums[i] = enumEntries[i].getEnumName()
+                enums[i] = enumEntries[i].getString()
             ;
 
             return enums;
