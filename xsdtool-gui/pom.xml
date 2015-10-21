@@ -24,11 +24,16 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.9</version>
+		</dependency>
+
+		<dependency>
 			<groupId>ru.jader.xsdlib</groupId>
 			<artifactId>xsdlib</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>

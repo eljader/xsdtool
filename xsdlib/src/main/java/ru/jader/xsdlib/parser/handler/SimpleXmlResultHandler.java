@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 import ru.jader.xsdlib.parser.model.XsdUnit;
 
-public final class XmlResultHandler implements ParseHandler {
+public final class SimpleXmlResultHandler implements ParseHandler {
 
     private String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
     private String ROOT_NAME = "units";
@@ -15,7 +15,7 @@ public final class XmlResultHandler implements ParseHandler {
 
     private PrintWriter writer;
 
-    public XmlResultHandler(PrintWriter writer) {
+    public SimpleXmlResultHandler(PrintWriter writer) {
         this.writer = writer;
         this.writer.println(XML_DECLARATION);
         openTag(ROOT_NAME, IDENT_NO);
@@ -31,7 +31,7 @@ public final class XmlResultHandler implements ParseHandler {
         closeTag(UNIT_NAME, IDENT_TAB);
     }
 
-    public void finalize() {
+    public void complete() {
         closeTag(ROOT_NAME, IDENT_NO);
         writer.flush();
     }

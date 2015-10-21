@@ -1,4 +1,4 @@
-package ru.jader.xsdtool.gui.common.control;
+package ru.jader.xsdtool.gui.control.features;
 
 import java.util.function.Predicate;
 
@@ -19,6 +19,7 @@ public class SearchFilterListener<T> implements ChangeListener<String> {
 	private T filterSelected;
 	private ItemFilter filter = new ItemFilter();
 	private short event = EVENT_NOT_SELECTED;
+	private String promptText = "Start typing to see the result";
 
 	private ComboBox<T> instance;
 	private ObservableList<T> allItems;
@@ -40,6 +41,15 @@ public class SearchFilterListener<T> implements ChangeListener<String> {
 		instance.setConverter(converter);
 		instance.setItems(items);
 		instance.getEditor().textProperty().addListener(this);
+		instance.setPromptText(getPromptText());
+	}
+
+	public String getPromptText() {
+		return this.promptText;
+	}
+
+	public String setPromptText(String text) {
+		return this.promptText = text;
 	}
 
 	public void changed(
