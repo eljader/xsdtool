@@ -51,19 +51,32 @@ public class MainController {
 	}
 
 	@FXML protected void makeDocument(ActionEvent event) throws XmlException, IOException, ParseComponentException, ParseHandlerException {
-		SchemaComponent component = schemaCombo.getValue();
-		String filename = String.format("%s%s", component.getName().getLocalPart(), ".xlsx");
+		FileChooser chooser = new FileChooser();
 
-		XlsDocumentTemplate template = new SpreadsheetXlsDocumentTemplate(
-			documentEditor,
-			mergeCellEditor,
-			xsdLabelEditor
-		);
+		chooser.setTitle("Generate Document");
+	    chooser
+	    	.getExtensionFilters()
+	    	.add(new FileChooser.ExtensionFilter(".xlsx", "*.xlsx"))
+	    ;
 
-		XlsDocumentGenerator generator = new XlsDocumentGenerator(filename, component, template);
-		generator.generate();
+	    File file = chooser.showSaveDialog(new Stage());
 
-		logMessage(String.format("%s generated succesful", filename));
+	    if(file != null) {
+
+			SchemaComponent component = schemaCombo.getValue();
+			String filename = file.getAbsolutePath();
+
+			XlsDocumentTemplate template = new SpreadsheetXlsDocumentTemplate(
+				documentEditor,
+				mergeCellEditor,
+				xsdLabelEditor
+			);
+
+			XlsDocumentGenerator generator = new XlsDocumentGenerator(filename, component, template);
+			generator.generate();
+
+			logMessage(String.format("%s generated succesful", filename));
+	    }
 	}
 
 	@FXML protected void loadSchema(ActionEvent event) throws XmlException, IOException {

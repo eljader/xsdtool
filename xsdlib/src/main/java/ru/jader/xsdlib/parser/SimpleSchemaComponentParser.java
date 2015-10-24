@@ -32,7 +32,14 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
 
     @Override
     protected String rebuildPath(String path, SchemaLocalElement element) {
-        return rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER);
+        return
+    		String.format(
+				"%s[%d..%s]",
+				rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER),
+				element.getMinOccurs(),
+				element.getMaxOccurs() != null ? element.getMaxOccurs().toString() : "unbounded"
+			)
+		;
     }
 
     private String rebuildPath(String path, String name, String delimiter) {
@@ -116,7 +123,7 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
                 if(facet != null)
                     addLineSeparator(description)
                         .append(
-                            String.format("%s=$s", facetEntry.getKey(), facet.getStringValue())
+                            String.format("%s=%s", facetEntry.getKey(), facet.getStringValue())
                         )
                 ;
             }

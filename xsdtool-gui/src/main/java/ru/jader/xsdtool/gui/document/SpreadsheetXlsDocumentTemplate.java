@@ -91,7 +91,6 @@ public final class SpreadsheetXlsDocumentTemplate implements XlsDocumentTemplate
 		for(List<SpreadsheetCell> row : getGrid().getRows())
 			for(SpreadsheetCell cell : row)
 				if(!cell.getText().isEmpty()) {
-					System.out.println(new Double(getGrid().getRowHeight(cell.getRow())).shortValue());
 					result.add(
 						new TemplateCell(
 							cell.getRow(),
