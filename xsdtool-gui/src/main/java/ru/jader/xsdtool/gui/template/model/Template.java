@@ -9,19 +9,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Template {
 
-	@XmlElement(name = "cells") private CellsWrapper cellsWrapper;
+    @XmlElement(name = "cells") private CellsWrapper cellsWrapper;
 
-	public Template() {}
+    public Template() {}
 
-	public Template(CellsWrapper cellsWrapper) {
-		setCellsWrapper(cellsWrapper);
-	}
+    public Template(CellsWrapper cellsWrapper) {
+        setCellsWrapper(cellsWrapper);
+    }
 
-	public CellsWrapper getCellsWrapper() {
-		return cellsWrapper;
-	}
+    public CellsWrapper getCellsWrapper() {
+        return cellsWrapper;
+    }
 
-	public void setCellsWrapper(CellsWrapper cellsWrapper) {
-		this.cellsWrapper = cellsWrapper;
-	}
+    public void setCellsWrapper(CellsWrapper cellsWrapper) {
+        this.cellsWrapper = cellsWrapper;
+    }
 }

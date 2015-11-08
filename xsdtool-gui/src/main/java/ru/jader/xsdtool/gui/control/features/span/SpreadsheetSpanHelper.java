@@ -5,7 +5,7 @@ import java.util.List;
 import javafx.scene.control.TablePosition;
 
 public interface SpreadsheetSpanHelper {
-	public boolean isMerged(TablePosition<?, ?> cell);
-	public void merge(List<TablePosition<?, ?>> cells);
-	public void split(TablePosition<?, ?> cell);
+    public boolean isMerged(TablePosition<?, ?> cell);
+    public void merge(List<TablePosition<?, ?>> cells);
+    public void split(TablePosition<?, ?> cell);
 }

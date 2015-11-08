@@ -12,21 +12,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CellsWrapper {
 
-	@XmlElement(name = "cell") private List<Cell> cells;
+    @XmlElement(name = "cell") private List<Cell> cells;
 
-	public CellsWrapper() {
-		cells = new ArrayList<Cell>();
-	}
+    public CellsWrapper() {
+        cells = new ArrayList<Cell>();
+    }
 
-	public CellsWrapper(List<Cell> cells) {
-		setCells(cells);
-	}
+    public CellsWrapper(List<Cell> cells) {
+        setCells(cells);
+    }
 
-	public List<Cell> getCells() {
-		return cells;
-	}
+    public List<Cell> getCells() {
+        return cells;
+    }
 
-	public void setCells(List<Cell> cells) {
-		this.cells = cells;
-	}
+    public void setCells(List<Cell> cells) {
+        this.cells = cells;
+    }
 }

@@ -8,35 +8,35 @@ import org.controlsfx.control.spreadsheet.SpreadsheetCellType.ListType;
 public class XSDLabelType extends ListType {
 
     public enum XSDComponentLabel {
-    	NAME {
-    		public String value() { return "#NAME"; }
-    	},
-    	TYPE {
-    		public String value() { return "#TYPE"; }
-    	},
-    	DESCRIPTION {
-    		public String value() { return "#DESCR"; }
-    	};
+        NAME {
+            public String value() { return "#NAME"; }
+        },
+        TYPE {
+            public String value() { return "#TYPE"; }
+        },
+        DESCRIPTION {
+            public String value() { return "#DESCR"; }
+        };
 
-    	public static XSDComponentLabel get(String value) {
-    		for(XSDComponentLabel label : XSDComponentLabel.values())
-    			if(label.value().equals(value))
-    				return label;
-    		return null;
-    	}
+        public static XSDComponentLabel get(String value) {
+            for(XSDComponentLabel label : XSDComponentLabel.values())
+                if(label.value().equals(value))
+                    return label;
+            return null;
+        }
 
-    	public static List<String> stringValues() {
-    		List<String> values = new ArrayList<String>(values().length);
-    		for(XSDComponentLabel label : XSDComponentLabel.values())
-    			values.add(label.value());
+        public static List<String> stringValues() {
+            List<String> values = new ArrayList<String>(values().length);
+            for(XSDComponentLabel label : XSDComponentLabel.values())
+                values.add(label.value());
 
-    		return values;
-    	}
+            return values;
+        }
 
-    	public abstract String value();
+        public abstract String value();
     }
 
-	public XSDLabelType() {
-		super(XSDComponentLabel.stringValues());
-	}
+    public XSDLabelType() {
+        super(XSDComponentLabel.stringValues());
+    }
 }

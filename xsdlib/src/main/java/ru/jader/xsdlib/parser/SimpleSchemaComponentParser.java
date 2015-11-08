@@ -33,13 +33,13 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
     @Override
     protected String rebuildPath(String path, SchemaLocalElement element) {
         return
-    		String.format(
-				"%s[%d..%s]",
-				rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER),
-				element.getMinOccurs(),
-				element.getMaxOccurs() != null ? element.getMaxOccurs().toString() : "*"
-			)
-		;
+            String.format(
+                "%s[%d..%s]",
+                rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER),
+                element.getMinOccurs(),
+                element.getMaxOccurs() != null ? element.getMaxOccurs().toString() : "*"
+            )
+        ;
     }
 
     private String rebuildPath(String path, String name, String delimiter) {

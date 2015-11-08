@@ -10,75 +10,75 @@ import javafx.stage.WindowEvent;
 
 public final class MergeCellEditor extends SpreadsheetEditor {
 
-	private SpreadsheetSpanHelper helper;
+    private SpreadsheetSpanHelper helper;
 
-	public MergeCellEditor(SpreadsheetSpanHelper helper) {
-		this.helper = helper;
-	}
+    public MergeCellEditor(SpreadsheetSpanHelper helper) {
+        this.helper = helper;
+    }
 
-	@Override
-	protected void initializeSources() {
-		this.getSourceRegistry().add(new MenuItemSource(
-			"Merge Cells",
-			new MergeCellsHandler(),
-			new MergeCellsAccessMenuItemHandler()
-		));
-		this.getSourceRegistry().add(new MenuItemSource(
-			"Split Cell",
-			new SplitCellsHandler(),
-			new SplitCellsAccessMenuItemHandler()
-		));
-	}
+    @Override
+    protected void initializeSources() {
+        this.getSourceRegistry().add(new MenuItemSource(
+            "Merge Cells",
+            new MergeCellsHandler(),
+            new MergeCellsAccessMenuItemHandler()
+        ));
+        this.getSourceRegistry().add(new MenuItemSource(
+            "Split Cell",
+            new SplitCellsHandler(),
+            new SplitCellsAccessMenuItemHandler()
+        ));
+    }
 
     private final class MergeCellsHandler implements EventHandler<ActionEvent> {
-		public void handle(ActionEvent event) {
-			helper.merge(getSelectedCells());
-			refreshView();
-		}
+        public void handle(ActionEvent event) {
+            helper.merge(getSelectedCells());
+            refreshView();
+        }
     }
 
     private final class SplitCellsHandler implements EventHandler<ActionEvent> {
-		public void handle(ActionEvent event) {
-			helper.split(getSelectedCell());
-			refreshView();
-		}
+        public void handle(ActionEvent event) {
+            helper.split(getSelectedCell());
+            refreshView();
+        }
     }
 
     private final class MergeCellsAccessMenuItemHandler extends AccessMenuItemHandler {
 
-		public void handle(WindowEvent event) {
-			item.setDisable(
-				canMerge(getSelectedCells()) ? false : true
-			);
-		}
+        public void handle(WindowEvent event) {
+            item.setDisable(
+                canMerge(getSelectedCells()) ? false : true
+            );
+        }
 
-		private boolean canMerge(List<TablePosition<?, ?>> selectedCells) {
-			if (selectedCells.size() == 1)
-				return false;
+        private boolean canMerge(List<TablePosition<?, ?>> selectedCells) {
+            if (selectedCells.size() == 1)
+                return false;
 
-			for(int i = 0; i < selectedCells.size() - 1; i++) {
-				TablePosition<?, ?> currentPosition = selectedCells.get(i);
-				TablePosition<?, ?> nextPosition = selectedCells.get(i+1);
+            for(int i = 0; i < selectedCells.size() - 1; i++) {
+                TablePosition<?, ?> currentPosition = selectedCells.get(i);
+                TablePosition<?, ?> nextPosition = selectedCells.get(i+1);
 
-				if(helper.isMerged(currentPosition))
-					return false;
+                if(helper.isMerged(currentPosition))
+                    return false;
 
-				if (nextPosition.getRow() - currentPosition.getRow() > 1)
-					return false;
+                if (nextPosition.getRow() - currentPosition.getRow() > 1)
+                    return false;
 
-				if (nextPosition.getColumn() - currentPosition.getColumn() > 1)
-					return false;
-			}
+                if (nextPosition.getColumn() - currentPosition.getColumn() > 1)
+                    return false;
+            }
 
-			return true;
-		}
+            return true;
+        }
     }
 
     private final class SplitCellsAccessMenuItemHandler extends AccessMenuItemHandler {
-		public void handle(WindowEvent event) {
-			item.setDisable(
-				helper.isMerged(getSelectedCell()) ? false : true
-			);
-		}
+        public void handle(WindowEvent event) {
+            item.setDisable(
+                helper.isMerged(getSelectedCell()) ? false : true
+            );
+        }
     }
 }

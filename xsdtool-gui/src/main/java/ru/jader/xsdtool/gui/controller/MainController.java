@@ -46,106 +46,104 @@ import javafx.stage.FileChooser;
 
 public class MainController {
 
-	@FXML private TextField filepath;
-	@FXML private ComboBox<SchemaComponent> schemaCombo;
-	@FXML private SpreadsheetView documentEditor;
-	@FXML private TextArea output;
-	@FXML private MenuItem makeDocumentMenuItem;
+    @FXML private TextField filepath;
+    @FXML private ComboBox<SchemaComponent> schemaCombo;
+    @FXML private SpreadsheetView documentEditor;
+    @FXML private TextArea output;
+    @FXML private MenuItem makeDocumentMenuItem;
 
-	@FXML
-	public void initialize() {
-		new MergeCellEditor(new ComputationSpanHelper(documentEditor)).initialize(documentEditor);
-		new XSDLabelEditor().initialize(documentEditor);
-	}
+    @FXML
+    public void initialize() {
+        new MergeCellEditor(new ComputationSpanHelper(documentEditor)).initialize(documentEditor);
+        new XSDLabelEditor().initialize(documentEditor);
+    }
 
-	@FXML protected void makeDocument(ActionEvent event) throws XmlException, IOException, ParseComponentException, ParseHandlerException {
-		FileChooser chooser = this.getFileChooser("Generate Document", ".xlsx", "*.xlsx");
-	    File file = chooser.showOpenDialog(null);
+    @FXML protected void makeDocument(ActionEvent event) throws XmlException, IOException, ParseComponentException, ParseHandlerException {
+        FileChooser chooser = this.getFileChooser("Generate Document", ".xlsx", "*.xlsx");
+        File file = chooser.showOpenDialog(null);
 
-	    if(file != null) {
-	    	Workbook workbook = file.exists() ? new XSSFWorkbook(new FileInputStream(file)) : new XSSFWorkbook();
-			SchemaComponent component = schemaCombo.getValue();
-			String filename = file.getAbsolutePath();
-			OutputStream out = null;
+        if(file != null) {
+            Workbook workbook = file.exists() ? new XSSFWorkbook(new FileInputStream(file)) : new XSSFWorkbook();
+            SchemaComponent component = schemaCombo.getValue();
+            String filename = file.getAbsolutePath();
+            OutputStream out = null;
 
-			try {
-				out = new FileOutputStream(filename);
-				ParseHandler handler = new XLSDocumentHandler(out, new SpreadsheetSource(workbook, documentEditor));
-				SchemaComponentParser parser = new SimpleSchemaComponentParser(handler);
-				parser.parse(component);
+            try {
+                out = new FileOutputStream(filename);
+                ParseHandler handler = new XLSDocumentHandler(out, new SpreadsheetSource(workbook, documentEditor));
+                SchemaComponentParser parser = new SimpleSchemaComponentParser(handler);
+                parser.parse(component);
 
-				handler.complete();
-			} finally {
-				out.close();
-			}
+                handler.complete();
+            } finally {
+                out.close();
+            }
 
-			logMessage(String.format("Document %s generated succesful", filename));
-	    }
-	}
+            logMessage(String.format("Document %s generated succesful", filename));
+        }
+    }
 
-	@FXML protected void loadSchema(ActionEvent event) throws XmlException, IOException {
-	    FileChooser chooser = this.getFileChooser("Load Schema", ".xsd .wsdl", "*.xsd", "*.wsdl");
-	    File file = chooser.showOpenDialog(null);
+    @FXML protected void loadSchema(ActionEvent event) throws XmlException, IOException {
+        FileChooser chooser = this.getFileChooser("Load Schema", ".xsd .wsdl", "*.xsd", "*.wsdl");
+        File file = chooser.showOpenDialog(null);
 
-	    if(file != null) {
+        if(file != null) {
 
-		    filepath.setText(file.getAbsolutePath());
+            filepath.setText(file.getAbsolutePath());
 
-		    Schema schema = this.getSchema(file);
-		    ObservableList<SchemaComponent> items = FXCollections.observableArrayList();
+            Schema schema = this.getSchema(file);
+            ObservableList<SchemaComponent> items = FXCollections.observableArrayList();
 
-	        items.addAll(Arrays.asList(schema.globalElements()));
-	        items.addAll(Arrays.asList(schema.globalTypes()));
+            items.addAll(Arrays.asList(schema.globalElements()));
+            items.addAll(Arrays.asList(schema.globalTypes()));
 
-	        new SearchFilterListener<SchemaComponent>(schemaCombo, items, new SchemaComponentConverter());
+            new SearchFilterListener<SchemaComponent>(schemaCombo, items, new SchemaComponentConverter());
 
-	        schemaCombo.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent event) {
-					makeDocumentMenuItem.setDisable(false);
-				}
-			});
+            schemaCombo.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
+                    makeDocumentMenuItem.setDisable(false);
+                }
+            });
 
-		    logMessage(String.format("%s processed succesful", file.getAbsolutePath()));
-	    }
-	}
+            logMessage(String.format("%s processed succesful", file.getAbsolutePath()));
+        }
+    }
 
-	@FXML protected void loadTemplate() throws TemplateManagerException {
-		FileChooser chooser = this.getFileChooser("Load Template", ".xml", "*.xml");
-	    File file = chooser.showOpenDialog(null);
+    @FXML protected void loadTemplate() throws TemplateManagerException {
+        FileChooser chooser = this.getFileChooser("Load Template", ".xml", "*.xml");
+        File file = chooser.showOpenDialog(null);
 
-	    if(file != null) {
-	    	TemplateManager manager = new DefaultTemplateManager(documentEditor, file);
-	    	manager.read();
+        if(file != null) {
+            TemplateManager manager = new DefaultTemplateManager(documentEditor, file);
+            manager.read();
 
-			logMessage(String.format("Template %s load succesful", file.getAbsolutePath()));
-	    }
+            logMessage(String.format("Template %s load succesful", file.getAbsolutePath()));
+        }
+    }
 
-	    throw new TemplateManagerException("test");
-	}
+    @FXML protected void saveTemplate() throws TemplateManagerException {
+        FileChooser chooser = this.getFileChooser("Save Template", ".xml", "*.xml");
+        File file = chooser.showSaveDialog(null);
 
-	@FXML protected void saveTemplate() throws TemplateManagerException {
-		FileChooser chooser = this.getFileChooser("Save Template", ".xml", "*.xml");
-	    File file = chooser.showSaveDialog(null);
+        if(file != null) {
+            TemplateManager manager = new DefaultTemplateManager(documentEditor, file);
+            manager.write();
 
-	    if(file != null) {
-	    	TemplateManager manager = new DefaultTemplateManager(documentEditor, file);
-	    	manager.write();
+            logMessage(String.format("Template %s saved succesful", file.getAbsolutePath()));
+        }
+    }
 
-			logMessage(String.format("Template %s saved succesful", file.getAbsolutePath()));
-	    }
-	}
+    private FileChooser getFileChooser(String title, String description, String... extensions) {
+        FileChooser chooser = new FileChooser();
 
-	private FileChooser getFileChooser(String title, String description, String... extensions) {
-		FileChooser chooser = new FileChooser();
+        chooser.setTitle(title);
+        chooser
+            .getExtensionFilters()
+            .add(new FileChooser.ExtensionFilter(description, extensions))
+        ;
 
-		chooser.setTitle(title);
-	    chooser
-	    	.getExtensionFilters()
-	    	.add(new FileChooser.ExtensionFilter(description, extensions))
-	    ;
-
-	    return chooser;
-	}
+        return chooser;
+    }
 
     private Schema getSchema(File file) throws XmlException, IOException {
         String fileName = file.getName();
@@ -163,14 +161,14 @@ public class MainController {
         return schema;
     }
 
-	public void logMessage(String message) {
-		output.appendText(message + System.getProperty("line.separator"));
-	}
+    public void logMessage(String message) {
+        output.appendText(message + System.getProperty("line.separator"));
+    }
 
-	public void logError(Throwable e) {
-	    StringWriter error = new StringWriter();
-	    e.printStackTrace(new PrintWriter(error));
+    public void logError(Throwable e) {
+        StringWriter error = new StringWriter();
+        e.printStackTrace(new PrintWriter(error));
 
-		output.appendText(error.toString() + System.getProperty("line.separator"));
-	}
+        output.appendText(error.toString() + System.getProperty("line.separator"));
+    }
 }

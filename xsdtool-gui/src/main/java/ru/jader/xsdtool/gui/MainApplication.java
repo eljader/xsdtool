@@ -10,16 +10,16 @@ import javafx.stage.Stage;
 
 public class MainApplication extends Application {
 
-	public static FXMLLoader loader;
+    public static FXMLLoader loader;
 
     public static void main(String[] args) throws Exception {
-    	Thread.setDefaultUncaughtExceptionHandler(MainApplication::handleError);
+        Thread.setDefaultUncaughtExceptionHandler(MainApplication::handleError);
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-    	String fxmlFile = "/fxml/main.fxml";
+        String fxmlFile = "/fxml/main.fxml";
         loader = new FXMLLoader();
         Parent root = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
         stage.setTitle("xsdtool");
@@ -28,13 +28,13 @@ public class MainApplication extends Application {
     }
 
     private static void handleError(Thread t, Throwable e) {
-    	try {
-    		e.printStackTrace();
-    		MainController controller = loader.getController();
-        	controller.logError(e);
-    	} catch (Exception exception) {
-    		exception.printStackTrace();
-        	Platform.exit();
-    	}
+        try {
+            e.printStackTrace();
+            MainController controller = loader.getController();
+            controller.logError(e);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Platform.exit();
+        }
     }
 }

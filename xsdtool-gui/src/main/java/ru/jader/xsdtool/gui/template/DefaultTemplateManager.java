@@ -23,113 +23,113 @@ import ru.jader.xsdtool.gui.template.model.Template;
 
 public final class DefaultTemplateManager implements TemplateManager {
 
-	private SpreadsheetView context;
-	private File file;
+    private SpreadsheetView context;
+    private File file;
 
-	public DefaultTemplateManager(SpreadsheetView context, File file) {
-		this.context = context;
-		this.file = file;
-	}
+    public DefaultTemplateManager(SpreadsheetView context, File file) {
+        this.context = context;
+        this.file = file;
+    }
 
-	@Override
-	public void write() throws TemplateManagerException {
-		try {
-			Template template = new Template(new CellsWrapper(
-				toModelCells(context.getGrid().getRows())
-			));
+    @Override
+    public void write() throws TemplateManagerException {
+        try {
+            Template template = new Template(new CellsWrapper(
+                toModelCells(context.getGrid().getRows())
+            ));
 
-			JAXBContext
-				.newInstance(Template.class)
-				.createMarshaller()
-				.marshal(template, file)
-			;
-		} catch (JAXBException e) {
-			throw new TemplateManagerException(e);
-		}
-	}
+            JAXBContext
+                .newInstance(Template.class)
+                .createMarshaller()
+                .marshal(template, file)
+            ;
+        } catch (JAXBException e) {
+            throw new TemplateManagerException(e);
+        }
+    }
 
-	@Override
-	public void read() throws TemplateManagerException {
-		try {
-			Template template = (Template)
-				JAXBContext
-					.newInstance(Template.class)
-					.createUnmarshaller()
-					.unmarshal(file)
-			;
+    @Override
+    public void read() throws TemplateManagerException {
+        try {
+            Template template = (Template)
+                JAXBContext
+                    .newInstance(Template.class)
+                    .createUnmarshaller()
+                    .unmarshal(file)
+            ;
 
-			Grid grid = new GridBase(
-				context.getGrid().getRowCount(),
-				context.getGrid().getColumnCount()
-			);
+            Grid grid = new GridBase(
+                context.getGrid().getRowCount(),
+                context.getGrid().getColumnCount()
+            );
 
-			grid.setRows(
-				toSpreadsheetCells(
-					template.getCellsWrapper().getCells()
-				)
-			);
+            grid.setRows(
+                toSpreadsheetCells(
+                    template.getCellsWrapper().getCells()
+                )
+            );
 
-			context.setGrid(grid);
-		} catch (JAXBException e) {
-			throw new TemplateManagerException(e);
-		}
-	}
+            context.setGrid(grid);
+        } catch (JAXBException e) {
+            throw new TemplateManagerException(e);
+        }
+    }
 
-	private List<Cell> toModelCells(ObservableList<ObservableList<SpreadsheetCell>> rows) {
-		List<Cell> cells = new ArrayList<Cell>();
-		for(int row = 0; row < rows.size(); row++) {
-			for(SpreadsheetCell fromCell : rows.get(row)) {
-				Cell toCell = new Cell();
+    private List<Cell> toModelCells(ObservableList<ObservableList<SpreadsheetCell>> rows) {
+        List<Cell> cells = new ArrayList<Cell>();
+        for(int row = 0; row < rows.size(); row++) {
+            for(SpreadsheetCell fromCell : rows.get(row)) {
+                Cell toCell = new Cell();
 
-				toCell.setRow(fromCell.getRow());
-				toCell.setCol(fromCell.getColumn());
-				toCell.setRowSpan(fromCell.getRowSpan());
-				toCell.setColSpan(fromCell.getColumnSpan());
-				toCell.setActualRow(row);
-				toCell.setType(fromCell.getCellType().getClass().getSimpleName());
-				toCell.setValue(fromCell.getText());
+                toCell.setRow(fromCell.getRow());
+                toCell.setCol(fromCell.getColumn());
+                toCell.setRowSpan(fromCell.getRowSpan());
+                toCell.setColSpan(fromCell.getColumnSpan());
+                toCell.setActualRow(row);
+                toCell.setType(fromCell.getCellType().getClass().getSimpleName());
+                toCell.setValue(fromCell.getText());
 
-				cells.add(toCell);
-			}
-		}
+                cells.add(toCell);
+            }
+        }
 
-		return cells;
-	}
+        return cells;
+    }
 
-	private ObservableList<ObservableList<SpreadsheetCell>> toSpreadsheetCells(List<Cell> cells)
-		throws TemplateManagerException
-	{
-	    ObservableList<ObservableList<SpreadsheetCell>> rows = FXCollections.observableArrayList();
-		for(Cell fromCell : cells) {
-			if(fromCell.getActualRow() >= rows.size())
-				rows.add(FXCollections.observableArrayList());
+    private ObservableList<ObservableList<SpreadsheetCell>> toSpreadsheetCells(List<Cell> cells)
+        throws TemplateManagerException
+    {
+        ObservableList<ObservableList<SpreadsheetCell>> rows = FXCollections.observableArrayList();
+        for(Cell fromCell : cells) {
+            if(fromCell.getActualRow() >= rows.size())
+                rows.add(FXCollections.observableArrayList());
 
-			SpreadsheetCell toCell = new SpreadsheetCellBase(
-				fromCell.getRow(),
-				fromCell.getCol(),
-				fromCell.getRowSpan(),
-				fromCell.getColSpan(),
-				getCellType(fromCell.getType())
-			);
+            SpreadsheetCell toCell = new SpreadsheetCellBase(
+                fromCell.getRow(),
+                fromCell.getCol(),
+                fromCell.getRowSpan(),
+                fromCell.getColSpan(),
+                getCellType(fromCell.getType())
+            );
 
-			toCell.setItem(fromCell.getValue());
+            toCell.setItem(fromCell.getValue());
 
-			rows
-				.get(fromCell.getActualRow())
-				.add(fromCell.getCol(), toCell)
-			;
-		}
+            rows
+                .get(fromCell.getActualRow())
+                .add(fromCell.getCol(), toCell)
+            ;
+        }
 
-		return rows;
-	}
+        return rows;
+    }
 
-	private SpreadsheetCellType<?> getCellType(String typeName) throws TemplateManagerException {
-		if("StringType".equals(typeName))
-			return SpreadsheetCellType.STRING;
+    private SpreadsheetCellType<?> getCellType(String typeName) throws TemplateManagerException {
+        if("StringType".equals(typeName))
+            return SpreadsheetCellType.STRING;
 
-		if("XSDLabelType".equals(typeName))
-			return new XSDLabelType();
+        if("XSDLabelType".equals(typeName))
+            return new XSDLabelType();
 
-		throw new TemplateManagerException(String.format("unsupported cell type %s", typeName));
-	}
+        throw new TemplateManagerException(String.format("unsupported cell type %s", typeName));
+    }
 }
