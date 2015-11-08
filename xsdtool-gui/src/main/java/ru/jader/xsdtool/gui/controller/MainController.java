@@ -90,6 +90,7 @@ public class MainController {
         if(file != null) {
 
             filepath.setText(file.getAbsolutePath());
+            schemaCombo.setItems(FXCollections.observableArrayList());
 
             Schema schema = this.getSchema(file);
             ObservableList<SchemaComponent> items = FXCollections.observableArrayList();
