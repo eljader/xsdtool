@@ -17,7 +17,7 @@ import org.apache.xmlbeans.XmlObject;
 
 import ru.jader.xsdlib.parser.handler.ParseHandler;
 import ru.jader.xsdlib.parser.handler.ParseHandlerException;
-import ru.jader.xsdlib.parser.model.XsdUnit;
+import ru.jader.xsdlib.parser.model.XSDUnit;
 
 public class SimpleSchemaComponentParser extends SchemaComponentParser {
 
@@ -37,7 +37,7 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
 				"%s[%d..%s]",
 				rebuildPath(path, element.getName().getLocalPart(), ELEMENT_DELIMITER),
 				element.getMinOccurs(),
-				element.getMaxOccurs() != null ? element.getMaxOccurs().toString() : "unbounded"
+				element.getMaxOccurs() != null ? element.getMaxOccurs().toString() : "*"
 			)
 		;
     }
@@ -60,10 +60,10 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
     @Override
     protected boolean isRecursive(String path, SchemaLocalElement element) {
         //TODO make namespace sensitive
-        return (path.indexOf(String.format("/%s/", element.getName().getLocalPart())) == -1) ? false : true;
+        return (path.indexOf(String.format("/%s[", element.getName().getLocalPart())) == -1) ? false : true;
     }
 
-    private XsdUnit createXsdUnit(String path, Object parseObject) {
+    private XSDUnit createXsdUnit(String path, Object parseObject) {
         SchemaType type = null;
         StringBuilder description = new StringBuilder();
 
@@ -86,7 +86,7 @@ public class SimpleSchemaComponentParser extends SchemaComponentParser {
             throw new RuntimeException(String.format("not implemented for %s", parseObject.getClass()));
         }
 
-        return new XsdUnit(path, assembleType(type), description.toString());
+        return new XSDUnit(path, assembleType(type), description.toString());
     }
 
     private String assembleType(SchemaType type) {

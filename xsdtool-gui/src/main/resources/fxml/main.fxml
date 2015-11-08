@@ -9,54 +9,74 @@
 <?import ru.jader.xsdtool.gui.common.control.* ?>
 <?import org.controlsfx.control.spreadsheet.*?>
 
-<GridPane alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.jader.xsdtool.gui.controller.MainController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.0" minWidth="0.0" prefWidth="550.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.0" minWidth="0.0" prefWidth="0.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="Infinity" minHeight="10.0" prefHeight="145.0" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="152.0" valignment="TOP" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="370.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+<GridPane alignment="TOP_CENTER" style="-fx-background-color: GRAY;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.jader.xsdtool.gui.controller.MainController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <TextArea fx:id="output" editable="false" prefHeight="113.0" prefWidth="550.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
-         <font>
-            <Font size="9.0" />
-         </font>
-         <GridPane.margin>
-            <Insets top="5.0" />
-         </GridPane.margin></TextArea>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS">
+      <GridPane alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: WHITE;" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="0.0" prefWidth="550.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="550.0" minWidth="0.0" prefWidth="0.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" valignment="TOP" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="Infinity" minHeight="10.0" prefHeight="145.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="152.0" valignment="TOP" vgrow="ALWAYS" />
+        </rowConstraints>
          <children>
-            <TextField fx:id="filepath" editable="false" prefHeight="25.0" prefWidth="409.0" VBox.vgrow="NEVER" />
-            <ComboBox fx:id="schemaCombo" maxWidth="Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="561.0">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin></ComboBox>
-         </children>
-      </VBox>
-      <FlowPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="23.0" prefWidth="550.0" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-         <children>
-            <Button fx:id="makeDocumentButton" disable="true" mnemonicParsing="false" onAction="#makeDocument" prefHeight="25.0" prefWidth="125.0" text="make document" />
-            <Button mnemonicParsing="false" onAction="#loadSchema" prefHeight="25.0" prefWidth="125.0" text="load schema">
-               <FlowPane.margin>
-                  <Insets left="10.0" />
-               </FlowPane.margin>
-            </Button>
+            <TextArea fx:id="output" editable="false" prefHeight="113.0" prefWidth="550.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" right="10.0" top="5.0" />
+               </GridPane.margin>
+            </TextArea>
+            <VBox prefHeight="25.0" prefWidth="1000.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+               <children>
+                  <TextField fx:id="filepath" editable="false" prefHeight="8.0" prefWidth="1000.0" VBox.vgrow="NEVER" />
+                  <ComboBox fx:id="schemaCombo" maxWidth="Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="561.0">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </ComboBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="10.0" right="10.0" />
+               </GridPane.margin>
+            </VBox>
+            <ScrollPane maxWidth="1552.0" prefViewportHeight="109.0" prefViewportWidth="550.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2">
+               <content>
+                  <SpreadsheetView fx:id="documentEditor" prefHeight="2429.0" prefWidth="1533.0" />
+               </content>
+               <GridPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </GridPane.margin>
+            </ScrollPane>
+            <MenuBar maxWidth="Infinity" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" disable="false" text="Load Schema" onAction="#loadSchema"/>
+                    <MenuItem mnemonicParsing="false" disable="true" text="Generate Document" onAction="#makeDocument" fx:id="makeDocumentMenuItem"/>
+                    <MenuItem mnemonicParsing="false" disable="false" text="Load Template" onAction="#loadTemplate"/>
+                    <MenuItem mnemonicParsing="false" disable="false" text="Save Template" onAction="#saveTemplate"/>
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
          </children>
          <padding>
-            <Insets top="10.0" />
+            <Insets bottom="10.0" />
          </padding>
-      </FlowPane>
-      <ScrollPane prefViewportHeight="109.0" prefViewportWidth="550.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-         <content>
-            <SpreadsheetView fx:id="documentEditor" prefHeight="800.0" prefWidth="1550.0" />
-         </content>
-      </ScrollPane>
+      </GridPane>
    </children>
-   <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-   </padding>
 </GridPane>

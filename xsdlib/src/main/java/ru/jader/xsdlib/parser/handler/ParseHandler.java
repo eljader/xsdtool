@@ -1,8 +1,8 @@
 package ru.jader.xsdlib.parser.handler;
 
-import ru.jader.xsdlib.parser.model.XsdUnit;
+import ru.jader.xsdlib.parser.model.XSDUnit;
 
 public interface ParseHandler {
-    public void handle(XsdUnit unit) throws ParseHandlerException;
+    public void handle(XSDUnit unit) throws ParseHandlerException;
     public void complete() throws ParseHandlerException;
 }

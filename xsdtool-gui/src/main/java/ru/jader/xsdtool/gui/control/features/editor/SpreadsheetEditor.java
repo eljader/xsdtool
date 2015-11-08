@@ -74,8 +74,6 @@ abstract public class SpreadsheetEditor {
 
     protected abstract void initializeSources();
 
-    public abstract Object getTarget();
-
 	protected SpreadsheetView getSpreadsheet() { return spreadsheet; }
 
 	protected List<MenuItemSource> getSourceRegistry() { return sourceRegistry; }
@@ -92,5 +90,9 @@ abstract public class SpreadsheetEditor {
 					this.getSpreadsheet().getSelectionModel().getSelectedCells()
 			)
 		;
+	}
+
+	protected void refreshView() {
+		getSpreadsheet().setGrid(getSpreadsheet().getGrid());
 	}
 }

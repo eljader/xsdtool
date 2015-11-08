@@ -2,9 +2,9 @@ package ru.jader.xsdlib.parser.handler;
 
 import java.io.PrintWriter;
 
-import ru.jader.xsdlib.parser.model.XsdUnit;
+import ru.jader.xsdlib.parser.model.XSDUnit;
 
-public final class SimpleXmlResultHandler implements ParseHandler {
+public final class SimpleXMLResultHandler implements ParseHandler {
 
     private String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
     private String ROOT_NAME = "units";
@@ -15,13 +15,13 @@ public final class SimpleXmlResultHandler implements ParseHandler {
 
     private PrintWriter writer;
 
-    public SimpleXmlResultHandler(PrintWriter writer) {
+    public SimpleXMLResultHandler(PrintWriter writer) {
         this.writer = writer;
         this.writer.println(XML_DECLARATION);
         openTag(ROOT_NAME, IDENT_NO);
     }
 
-    public void handle(XsdUnit unit) {
+    public void handle(XSDUnit unit) {
         openTag(UNIT_NAME, IDENT_TAB);
 
         addElement("path", unit.getPath(), IDENT_TAB * 2);

@@ -18,7 +18,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class WsdlSchema extends Schema {
+public class WSDLSchema extends Schema {
 
     private static String OBJECTIVE_TAG_NAME = "schema";
     private static String OBJECTIVE_TAG_NS = "http://www.w3.org/2001/XMLSchema";

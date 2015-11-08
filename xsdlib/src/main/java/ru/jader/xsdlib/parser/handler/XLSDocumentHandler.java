@@ -14,34 +14,33 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import ru.jader.xsdlib.parser.handler.ParseHandler;
 import ru.jader.xsdlib.parser.handler.ParseHandlerException;
-import ru.jader.xsdlib.parser.handler.XlsDocumentHandler.XlsDocumentTemplate.TemplateCell;
-import ru.jader.xsdlib.parser.model.XsdUnit;
+import ru.jader.xsdlib.parser.handler.XLSDocumentHandler.XLSDocumentSource.SourceCell;
+import ru.jader.xsdlib.parser.model.XSDUnit;
 
-public final class XlsDocumentHandler implements ParseHandler {
+public final class XLSDocumentHandler implements ParseHandler {
 
 	private OutputStream writer;
-	private XlsDocumentTemplate template;
-	private Sheet sheet;
-	private List<TemplateCell> xsdLabelCells;
+	private XLSDocumentSource source;
+
+	private List<SourceCell> xsdLabelCells;
 	private int rowOffset = 0;
 
-	public XlsDocumentHandler(OutputStream writer, XlsDocumentTemplate template) {
+	public XLSDocumentHandler(OutputStream writer, XLSDocumentSource source) {
 		this.writer = writer;
-		this.template = template;
-		this.sheet = template.getWorkbook().createSheet();
-		this.xsdLabelCells = template.xsdLabelCells();
+		this.source = source;
+		this.xsdLabelCells = source.getXSDLabelCells();
 
-		genereteRegularCells(template.getRegularCells());
-		mergeCells(template.getListCellRangeAddress());
+		genereteRegularCells(source.getRegularCells());
+		mergeCells(source.getListCellRangeAddress());
 	}
 
-	public void handle(XsdUnit unit) throws ParseHandlerException {
+	public void handle(XSDUnit unit) throws ParseHandlerException {
 		try {
-			for(TemplateCell fromCell: xsdLabelCells)
+			for(SourceCell fromCell: xsdLabelCells)
 	    		createCell(
     				fromCell.getRow() + rowOffset,
     				fromCell.getCol(),
-    				(String) XsdUnit.class.getDeclaredMethod(fromCell.getValue()).invoke(unit),
+    				(String) XSDUnit.class.getDeclaredMethod(fromCell.getValue()).invoke(unit),
     				fromCell.getStyle()
 				)
 			;
@@ -56,18 +55,18 @@ public final class XlsDocumentHandler implements ParseHandler {
 
     public void complete() throws ParseHandlerException {
         try {
-        	template.getWorkbook().write(writer);
+        	source.getWorkbook().write(writer);
             writer.flush();
         } catch (IOException e) { throw new ParseHandlerException(e); }
     }
 
     private void mergeCells(List<CellRangeAddress> ranges) {
     	for(CellRangeAddress range: ranges)
-    		sheet.addMergedRegion(range);
+    		source.getSheet().addMergedRegion(range);
     }
 
-    private void genereteRegularCells(List<TemplateCell> fromCells) {
-    	for(TemplateCell fromCell: fromCells) {
+    private void genereteRegularCells(List<SourceCell> fromCells) {
+    	for(SourceCell fromCell: fromCells) {
     		Cell toCell = createCell(
 				fromCell.getRow(),
 				fromCell.getCol(),
@@ -76,7 +75,7 @@ public final class XlsDocumentHandler implements ParseHandler {
 			);
 
     		if(fromCell.getWidth() != null)
-    			sheet.setColumnWidth(fromCell.getCol(), fromCell.getWidth());
+    			source.getSheet().setColumnWidth(fromCell.getCol(), fromCell.getWidth());
 
     		if(fromCell.getHeight() != null)
     			toCell.getRow().setHeight(fromCell.getHeight());
@@ -84,9 +83,9 @@ public final class XlsDocumentHandler implements ParseHandler {
     }
 
     private Cell createCell(int rowNum, int colNum, String value, CellStyle style) {
-    	Row row = sheet.getRow(rowNum);
+    	Row row = source.getSheet().getRow(rowNum);
 		if(row == null)
-			row = sheet.createRow(rowNum);
+			row = source.getSheet().createRow(rowNum);
 
     	Cell cell = row.getCell(colNum);
 		if(cell == null)
@@ -98,13 +97,14 @@ public final class XlsDocumentHandler implements ParseHandler {
 		return cell;
     }
 
-    public interface XlsDocumentTemplate {
+    public interface XLSDocumentSource {
     	public Workbook getWorkbook();
+    	public Sheet getSheet();
     	public List<CellRangeAddress> getListCellRangeAddress();
-    	public List<TemplateCell> getRegularCells();
-    	public List<TemplateCell> xsdLabelCells();
+    	public List<SourceCell> getRegularCells();
+    	public List<SourceCell> getXSDLabelCells();
 
-        public class TemplateCell {
+        public class SourceCell {
         	private int row;
         	private int col;
         	private String value;
@@ -112,14 +112,14 @@ public final class XlsDocumentHandler implements ParseHandler {
         	private Integer width = null;
         	private Short height = null;
 
-    		public TemplateCell(int row, int col, String value, CellStyle style) {
+    		public SourceCell(int row, int col, String value, CellStyle style) {
     			this.row = row;
     			this.col = col;
     			this.value = value;
     			this.style = style;
     		}
 
-    		public TemplateCell(int row, int col, String value, CellStyle style, Integer width, Short height) {
+    		public SourceCell(int row, int col, String value, CellStyle style, Integer width, Short height) {
     			this.row = row;
     			this.col = col;
     			this.value = value;
@@ -134,6 +134,38 @@ public final class XlsDocumentHandler implements ParseHandler {
     		public CellStyle getStyle() { return style; }
 			public Integer getWidth() { return width; }
 			public Short getHeight() { return height; }
+
+			@Override
+			public int hashCode() {
+				final int prime = 31;
+				int result = 1;
+				result = prime * result + col;
+				result = prime * result + row;
+				result = prime * result
+						+ ((value == null) ? 0 : value.hashCode());
+				return result;
+			}
+
+			@Override
+			public boolean equals(Object obj) {
+				if (this == obj)
+					return true;
+				if (obj == null)
+					return false;
+				if (getClass() != obj.getClass())
+					return false;
+				SourceCell other = (SourceCell) obj;
+				if (col != other.col)
+					return false;
+				if (row != other.row)
+					return false;
+				if (value == null) {
+					if (other.value != null)
+						return false;
+				} else if (!value.equals(other.value))
+					return false;
+				return true;
+			}
         }
     }
 }

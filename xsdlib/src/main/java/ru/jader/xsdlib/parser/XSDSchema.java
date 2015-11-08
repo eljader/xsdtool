@@ -8,7 +8,7 @@ import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-public class XsdSchema extends Schema {
+public class XSDSchema extends Schema {
 
     public void load(File file) throws XmlException, IOException {
         this.sts = XmlBeans

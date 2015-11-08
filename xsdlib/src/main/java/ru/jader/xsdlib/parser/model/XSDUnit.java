@@ -1,12 +1,12 @@
 package ru.jader.xsdlib.parser.model;
 
-public class XsdUnit {
+public class XSDUnit {
 	
 	private String path;
 	private String type;
 	private String description;
 	
-	public XsdUnit(String xpath, String type, String description) {
+	public XSDUnit(String xpath, String type, String description) {
 		this.path = xpath;
 		this.type = type;
 		this.description = description;
